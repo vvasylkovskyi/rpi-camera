@@ -1,5 +1,5 @@
-# Use an official Python 3.13 image as the base
-FROM python:3.13-slim
+# Use an official Python 3.11 image as the base
+FROM python:3.11-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -25,9 +25,6 @@ ENV PATH="/root/.local/bin:$PATH"
 # Copy project files
 COPY pyproject.toml poetry.lock ./
 
-# Install Cython using pip after Poetry installs other dependencies
-RUN pip install cython
-
 # Install dependencies
 RUN poetry config virtualenvs.create false && \
     poetry install --no-root --only main
@@ -39,8 +36,8 @@ COPY . .
 ENV PYTHONPATH="${PYTHONPATH}:/app/src"
 
 # Expose the application port
-EXPOSE 2999
+EXPOSE 8080
 
 # Command to run the application
-CMD ["sh", "-c", "uvicorn rpi_camera.main:app --host 0.0.0.0 --port 2999 --reload"]
+CMD ["sh", "-c", "uvicorn rpi_camera.main:app --host 0.0.0.0 --port 8080 --reload"]
 
