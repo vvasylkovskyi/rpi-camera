@@ -2,7 +2,7 @@ services:
   rpi-camera:
     container_name: rpi-camera
     # build:
-    #   context: ./server
+    #   context: .
     #   dockerfile: ./deploy/Dockerfile
     image: vvasylkovskyi1/rpi-camera:latest
     restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
