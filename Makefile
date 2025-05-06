@@ -132,4 +132,4 @@ typecheck:
 .PHONY: run
 run:
 	@echo "Starting the development server"
-	@PYTHONPATH=src $(POETRY) run uvicorn ai_personal_lawyer.main:app --host 0.0.0.0 --port 2999 --reload
+	@PYTHONPATH=src $(POETRY) run uvicorn rpi_camera.main:app --host 0.0.0.0 --port 8080 --reload
