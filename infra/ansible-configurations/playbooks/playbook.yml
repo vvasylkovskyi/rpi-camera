@@ -1,0 +1,16 @@
+- name: Setup Raspberry Pi 
+  hosts: all
+  become: true
+  vars_files:
+    - ../secrets.yml
+
+  vars:
+    datadog_api_key: "{{ datadog_api_key }}"
+    datadog_site: "datadoghq.eu"
+
+  roles:
+    - setup
+    - datadog
+    - docker
+    - reboot
+    # - cloudflare_tunnel

@@ -1,0 +1,3 @@
+- name: Install Datadog Agent
+  import_role:
+    name: datadog.dd.agent

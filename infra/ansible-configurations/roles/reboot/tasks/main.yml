@@ -1,0 +1,6 @@
+- name: Reboot the system (required after group changes)
+  reboot:
+    msg: "Reboot initiated by Ansible after finishing the playbook. Ensures all changes are applied (e.g. user added to docker groups)."
+    connect_timeout: 5
+    reboot_timeout: 300
+    test_command: whoami
