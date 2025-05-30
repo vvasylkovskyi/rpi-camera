@@ -1,6 +1,6 @@
 # 📷 Raspberry Pi Camera
 
-<div style="display: flex; justify-content: center; margin-bottom: 10px; "><img src="./assets/Raspberry_Pi_logo.svg" alt="Raspberry Pi Camera Setup" width="150" height="150"/></div>
+<div style="display: flex; justify-content: center; margin-bottom: 10px; "><img src="./assets/Raspberry_Pi_logo.svg" alt="Raspberry Pi Camera Setup" width="150" height="150"/><img src="./assets/raspberry_pi_zero_in_case.jpg" alt="Raspberry pi device" width="150" height="150"/></div>
 
 
 This repository contains all the code and documentation required to turn a Raspberry Pi into a fully functional camera device. The project is structured into logical components to guide you from hardware setup to a production-ready software deployment.
