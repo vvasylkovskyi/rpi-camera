@@ -1,0 +1,12 @@
+- name: Remove any existing container named myapp
+  become: yes
+  shell: docker rm -f rpi-camera || true
+  args:
+    executable: /bin/bash
+
+- name: Start docker container with restart policy
+  become: yes
+  shell: |
+    docker run -d --name rpi-camera --restart unless-stopped -p 80:80 {{ docker_username }}/rpi-camera:latest
+  args:
+    executable: /bin/bash

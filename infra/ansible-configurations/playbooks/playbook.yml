@@ -13,11 +13,13 @@
     runner_labels: "rpi,arm64,docker"
     runner_dir: "/home/vvasylkovskyi/actions-runner" 
     runner_user: "vvasylkovskyi"       
+    docker_username: "{{ docker_username }}"
 
   roles:
-    - setup
+    # - setup
     # - datadog
-    - docker
+    # - docker
     # - camera_imx500
-    - promote_to_github_runner
-    - reboot
+    # - promote_to_github_runner
+    - docker_start_container_on_boot
+    # - reboot
