@@ -15,4 +15,4 @@ app.add_middleware(
 
 @app.get("/health-check")
 async def health_check():
-    return {"status": "healthy2"}
+    return {"status": "healthy-reboots-well"}

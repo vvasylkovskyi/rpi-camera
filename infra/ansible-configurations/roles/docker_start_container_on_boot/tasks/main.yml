@@ -1,12 +1,32 @@
-- name: Remove any existing container named myapp
+- name: Create systemd service to start latest docker container at boot
   become: yes
-  shell: docker rm -f rpi-camera || true
-  args:
-    executable: /bin/bash
+  copy:
+    dest: /etc/systemd/system/rpi-camera.service
+    content: |
+      [Unit]
+      Description=Start latest rpi-camera Docker container
+      After=docker.service
+      Requires=docker.service
 
-- name: Start docker container with restart policy
+      [Service]
+      Type=oneshot
+      RemainAfterExit=true
+      ExecStartPre=-/usr/bin/docker stop rpi-camera
+      ExecStartPre=-/usr/bin/docker rm rpi-camera
+      ExecStartPre=/usr/bin/docker pull {{ docker_username }}/rpi-camera
+      ExecStart=/usr/bin/docker run -d --name rpi-camera --restart unless-stopped -p 80:80 {{ docker_username }}/rpi-camera
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Reload systemd daemon
   become: yes
-  shell: |
-    docker run -d --name rpi-camera --restart unless-stopped -p 80:80 {{ docker_username }}/rpi-camera:latest
-  args:
-    executable: /bin/bash
+  systemd:
+    daemon_reload: yes
+
+- name: Enable rpi-camera service to start on boot
+  become: yes
+  systemd:
+    name: rpi-camera
+    enabled: yes
+    state: started
