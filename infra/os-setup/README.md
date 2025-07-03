@@ -49,7 +49,7 @@ Paste this into the SSH public key field in the Raspberry Pi Imager settings.
 ### Define Username and Network
 
 * Set a username (e.g., `pi`) and optionally leave the password blank.
-* (Optional) Configure wireless LAN settings (SSID, password, and country).
+* Configure wireless LAN settings (SSID, password, and country).
 * Set a hostname for easy network discovery (e.g., `raspberrypi`).
 
 Click **Save**, then **Write** to flash the SD card.

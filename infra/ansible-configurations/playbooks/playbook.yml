@@ -7,10 +7,17 @@
   vars:
     datadog_api_key: "{{ datadog_api_key }}"
     datadog_site: "datadoghq.eu"
+    github_repo_url: "https://github.com/vvasylkovskyi/rpi-camera"
+    runner_token: "AGFCS3IVCOEXAQOIIO4TXC3IM2H3S"
+    runner_version: "2.315.0"
+    runner_labels: "rpi,arm64,docker"
+    runner_dir: "/home/vvasylkovskyi/actions-runner" 
+    runner_user: "vvasylkovskyi"       
 
   roles:
     - setup
-    - datadog
+    # - datadog
     - docker
+    # - camera_imx500
+    - promote_to_github_runner
     - reboot
-    # - cloudflare_tunnel

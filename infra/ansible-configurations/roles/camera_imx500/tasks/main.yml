@@ -1,0 +1,2 @@
+- name: Install IMX500 firmware
+  command: apt install imx500-all

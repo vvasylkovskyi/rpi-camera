@@ -43,6 +43,9 @@ The camera is wireless so requires a batery module to function
 - Tesseract - for text reading
 - OpenCV - camera input and basic image handling
 
+### Waterproof Case
+- https://www.electromaker.io/tutorial/blog/build-a-wildlife-camera-using-a-raspberry-pi-and-pijuice 
+- TODO  
 
 # Next Steps
 
