@@ -1,5 +1,5 @@
-# Use an official Python 3.13 image as the base
-FROM python:3.11-slim
+# Use an official Python 3.11 image as the base
+FROM python:3.11.2-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
