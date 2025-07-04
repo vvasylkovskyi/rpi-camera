@@ -47,7 +47,7 @@ jobs:
       - name: Pull Docker Images
         working-directory: ./app
         run: |
-          docker-compose pull 
+          docker compose pull 
           ENDSSH
 
       - name: Restart Docker Images
@@ -56,5 +56,5 @@ jobs:
           ssh ${{ secrets.CF_SSH_USER }}@${{ secrets.CF_SSH_HOST }} << 'ENDSSH'
           docker stop $(docker ps -q)
           docker rm $(docker ps -aq)
-          docker-compose up -d
+          docker compose up -d
           ENDSSH
