@@ -32,3 +32,14 @@ Once you have the script, run `ansible-playbook -i inventory/all.yml playbooks/p
 Restart the Rpi device and observe that your server has reloaded, and with the new version of the app.
 
 
+## Device Setup workflow 
+
+1. Make sure you have all the necessary environment variables in `.env` file, `.vault_pass.txt` and you have created the empty vault file with `ansible-vault create secrets.yml`. Make sure that `secrets.yml` is gitignored as well.
+2. Encrypt the secrets for ansible by running `./infra/ansible-configurations/update-secrets.sh`
+3. Bootstrap device only once by running `ansible-playbook -i inventory/all.yml playbooks/bootstrap_device.yml --vault-password-file .vault_pass.txt`.
+4. Launch EC-2 Instance on AWS to serve as a reverse proxy, and use the SSH key created in the previous step. Note, terraform is using remote backend so you may need to comment it first for the resources to create locally. Just run once:
+  - `terraform init`
+  - `terraform apply --auto-approve`.
+5. Update the secrets and start reverse ssh tunnel running: `ansible-playbook -i inventory/all.yml playbooks/start_reverse_tunnel.yml --vault-password-file .vault_pass.txt`
+6. Open your app remotely on `your-domain.com` defined in `./infra/terraform/terraform.tfvars:domain_name`. 
+

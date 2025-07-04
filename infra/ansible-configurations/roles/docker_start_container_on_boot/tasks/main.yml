@@ -30,3 +30,8 @@
     name: rpi-camera
     enabled: yes
     state: started
+
+- name: Restart reverse SSH tunnel
+  systemd:
+    name: "rpi-camera"
+    state: restarted

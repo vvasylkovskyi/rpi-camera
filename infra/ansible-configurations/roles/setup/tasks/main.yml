@@ -11,3 +11,20 @@
       - python3-pip
     state: latest
     update_cache: yes
+
+- name: Ensure en_US.UTF-8 locale is present
+  lineinfile:
+    path: /etc/locale.gen
+    regexp: '^#?en_US.UTF-8 UTF-8'
+    line: 'en_US.UTF-8 UTF-8'
+
+- name: Generate locale
+  command: locale-gen
+
+- name: Set system locale to en_US.UTF-8
+  copy:
+    dest: /etc/default/locale
+    content: |
+      LANG=en_US.UTF-8
+      LC_ALL=en_US.UTF-8
+      LANGUAGE=en_US.UTF-8

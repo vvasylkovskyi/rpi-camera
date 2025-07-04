@@ -31,3 +31,8 @@
     name: "{{ systemd_service_name }}"
     enabled: yes
     state: started
+
+- name: Restart reverse SSH tunnel
+  systemd:
+    name: "{{ systemd_service_name }}"
+    state: restarted

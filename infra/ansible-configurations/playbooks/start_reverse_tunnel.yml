@@ -5,24 +5,12 @@
     - ../secrets.yml
 
   vars:
-    datadog_site: "datadoghq.eu"
-    datadog_api_key: "{{ datadog_api_key }}"
     ec2_user: "{{ ec2_user }}"
     ec2_ip: "{{ ec2_ip }}"
     remote_port: "{{ remote_port }}"
     local_port: "{{ local_port }}"
-    runner_dir: "{{ runner_dir }}" 
-    rpi_user: "{{ rpi_user }}"
-    runner_token: "{{ runner_token }}"
-    docker_username: "{{ docker_username }}"
     ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
-
-    github_repo_url: "https://github.com/vvasylkovskyi/rpi-camera"
-    runner_version: "2.315.0"
-    runner_labels: "rpi,arm64,docker"
-    local_pubkey_path: "~/.ssh/raspberry_pi_4b_reverse_proxy_public_key.pub"
     systemd_service_name: "reverse-ssh-tunnel.service"
-
 
   roles:
     - reverse_ssh_tunnel
