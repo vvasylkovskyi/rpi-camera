@@ -20,3 +20,15 @@ In `infra/ansible-configurations/roles/promote_to_github_runner/tasks/main.yml` 
 ```sh
     runs-on: [self-hosted, ARM64]
 ```
+
+## Deploying new app version on device restart
+
+The next things that I would want to do ideally is to make CI deploy the new image on my device. But for now I don't have device exposed, it only works in my local network. So the next best thing we can do is to force re-deploy on device restart. We can do it using ansible configuration - where we will create a `systemd` daemon that will pull docker image and start the container every time the device has to start. 
+
+This can be found at `infra/ansible-configurations/roles/docker_start_container_on_boot/tasks/main.yml`. 
+
+Once you have the script, run `ansible-playbook -i inventory/all.yml playbooks/playbook.yml --vault-password-file .vault_pass.txt`. 
+
+Restart the Rpi device and observe that your server has reloaded, and with the new version of the app.
+
+

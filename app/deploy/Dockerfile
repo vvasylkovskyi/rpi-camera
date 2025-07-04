@@ -36,8 +36,8 @@ COPY . .
 ENV PYTHONPATH="${PYTHONPATH}:/app/src"
 
 # Expose the application port
-EXPOSE 80
+EXPOSE 8080
 
 # Command to run the application
-CMD ["sh", "-c", "uvicorn rpi_camera.main:app --host 0.0.0.0 --port 80 --reload"]
+CMD ["sh", "-c", "uvicorn rpi_camera.main:app --host 0.0.0.0 --port 8080 --reload"]
 
