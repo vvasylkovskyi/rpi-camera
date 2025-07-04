@@ -48,13 +48,10 @@ jobs:
         working-directory: ./app
         run: |
           docker compose pull 
-          ENDSSH
 
       - name: Restart Docker Images
         working-directory: ./app
         run: |
-          ssh ${{ secrets.CF_SSH_USER }}@${{ secrets.CF_SSH_HOST }} << 'ENDSSH'
           docker stop $(docker ps -q)
           docker rm $(docker ps -aq)
           docker compose up -d
-          ENDSSH

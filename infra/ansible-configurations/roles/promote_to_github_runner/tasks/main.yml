@@ -17,25 +17,25 @@
   file:
     path: "{{ runner_dir }}"
     state: directory
-    owner: "{{ runner_user }}"
-    group: "{{ runner_user }}"
+    owner: "{{ rpi_user }}"
+    group: "{{ rpi_user }}"
 
 - name: Download GitHub Actions runner tarball
-  become_user: "{{ runner_user }}"
+  become_user: "{{ rpi_user }}"
   get_url:
     url: "https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-linux-arm64-{{ runner_version }}.tar.gz"
     dest: "{{ runner_dir }}/actions-runner.tar.gz"
     mode: '0644'
 
 - name: Extract GitHub Actions runner
-  become_user: "{{ runner_user }}"
+  become_user: "{{ rpi_user }}"
   unarchive:
     src: "{{ runner_dir }}/actions-runner.tar.gz"
     dest: "{{ runner_dir }}"
     remote_src: yes
 
 - name: Configure GitHub Actions runner
-  become_user: "{{ runner_user }}"
+  become_user: "{{ rpi_user }}"
   shell: |
     ./config.sh --unattended --url {{ github_repo_url }} --token {{ runner_token }} --labels {{ runner_labels }} --work _work
   args:
@@ -44,7 +44,7 @@
   changed_when: "'Runner successfully configured' in config_output.stdout"
 
 - name: Install runner as a service
-  become_user: "{{ runner_user }}"
+  become_user: "{{ rpi_user }}"
   shell: |
     sudo ./svc.sh install
     sudo ./svc.sh start

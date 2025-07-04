@@ -173,3 +173,5 @@ src/mock_producer/events.json
 .vscode
 
 src/mocks
+
+.terraform

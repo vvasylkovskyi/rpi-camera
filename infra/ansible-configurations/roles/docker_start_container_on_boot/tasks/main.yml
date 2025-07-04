@@ -14,7 +14,7 @@
       ExecStartPre=-/usr/bin/docker stop rpi-camera
       ExecStartPre=-/usr/bin/docker rm rpi-camera
       ExecStartPre=/usr/bin/docker pull {{ docker_username }}/rpi-camera
-      ExecStart=/usr/bin/docker run -d --name rpi-camera --restart unless-stopped -p 80:80 {{ docker_username }}/rpi-camera
+      ExecStart=/usr/bin/docker run -d --name rpi-camera --restart unless-stopped -p {{ local_port }}:{{ local_port }} {{ docker_username }}/rpi-camera
 
       [Install]
       WantedBy=multi-user.target
