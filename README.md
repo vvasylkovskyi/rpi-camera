@@ -21,7 +21,8 @@ The project is organized as follows:
   * Python and utility packages
   * Docker setup
   * Datadog integration for monitoring
-  * Cloudflare tunnel for remote access
+  * Camera firmware setup
+  * Remote SSH access setup
 
 * [`app/README.md`](./app/README.md)
   Details the core application that powers the camera functionality, turning your Raspberry Pi into a connected camera device.
