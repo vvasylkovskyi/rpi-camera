@@ -1,4 +1,4 @@
-- name: Setup Raspberry Pi 
+- name: Start SSH Tunnel
   hosts: all
   become: true
   vars_files:
@@ -25,12 +25,4 @@
 
 
   roles:
-    # - setup
-    # - datadog
-    # - docker
-    # - camera_imx500
-    # - promote_to_github_runner
-    # - generate_ssh_key_for_reverse_proxy_access
     - reverse_ssh_tunnel
-    # - docker_start_container_on_boot
-    # - reboot
