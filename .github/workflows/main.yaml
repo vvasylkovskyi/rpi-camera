@@ -18,15 +18,12 @@ jobs:
     runs-on: [self-hosted, ARM64]
     steps:
 
-      - name: Start SSH agent and add GitHub key
+      - name: Pull latest code from rpi-camera
         run: |
+          cd ~/git/rpi-camera
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/github_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          
-      - name: Go to rpi-camera folder and pull latest changes
-        run: |
-          cd ~/git/rpi-camera
           git pull
 
       - name: Kill whatever is using port 8081
