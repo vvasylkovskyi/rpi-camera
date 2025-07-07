@@ -16,7 +16,6 @@ on:
 jobs:
   deploy_to_rpi:
     runs-on: [self-hosted, ARM64]
-    needs: build_and_push
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
