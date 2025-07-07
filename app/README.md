@@ -43,3 +43,23 @@ Restart the Rpi device and observe that your server has reloaded, and with the n
 5. Update the secrets and start reverse ssh tunnel running: `ansible-playbook -i inventory/all.yml playbooks/start_reverse_tunnel.yml --vault-password-file .vault_pass.txt`
 6. Open your app remotely on `your-domain.com` defined in `./infra/terraform/terraform.tfvars:domain_name`. 
 
+
+
+## System packages
+
+Note there are some packages that can only exist on device, we need to be aware that this code will only run on the device with system packages. 
+
+So far we have `python3-picamera2` that is not available on `PyPI`. So we have installed this package using ansible: 
+
+```sh
+apt install -y python3-picamera2
+```
+
+Further, enable python virtual environment to access system packages we will run with `python -m venv` with `--system-site-packages`
+
+```sh
+.PHONY: new-venv
+new-venv:
+	@echo "Creating virtual environment with access to system packages"
+	@$(PYTHON) -m venv --system-site-packages "$(VENV_PATH)"
+```

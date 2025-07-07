@@ -61,8 +61,8 @@ install-deps:
 ################################################################################
 .PHONY: new-venv
 new-venv:
-	@echo "Creating virtual environment"
-	@$(PYTHON) -m venv "$(VENV_PATH)"
+	@echo "Creating virtual environment with access to system packages"
+	@$(PYTHON) -m venv --system-site-packages "$(VENV_PATH)"
 
 .PHONY: delete-venv
 delete-venv:
@@ -132,4 +132,4 @@ typecheck:
 .PHONY: run
 run:
 	@echo "Starting the development server"
-	@PYTHONPATH=src $(POETRY) run uvicorn rpi_camera.main:app --host 0.0.0.0 --port 8080--reload
+	@PYTHONPATH=src $(POETRY) run uvicorn rpi_camera.main:app --host 0.0.0.0 --port 8080 --reload
