@@ -14,23 +14,6 @@ on:
         required: true
 
 jobs:
-  build_and_push:
-    runs-on: [self-hosted, ARM64]
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push Server Container Image
-        run: |
-          docker build -f ./app/deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rpi-camera ./app
-          docker push ${{ secrets.DOCKER_USERNAME }}/rpi-camera
-
   deploy_to_rpi:
     runs-on: [self-hosted, ARM64]
     needs: build_and_push
@@ -38,19 +21,16 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Pull Docker Images
-        working-directory: ./app
+      - name: Kill whatever is using port 8081
         run: |
-          docker compose pull 
+          PID=$(sudo lsof -ti tcp:8081 || sudo ss -lptn 'sport = :8081' | awk 'NR > 1 {print $6}' | sed 's/pid=//' | cut -d, -f1)
+          if [ -n "$PID" ]; then
+            echo "Killing process on port 8081 (PID $PID)"
+            sudo kill -9 $PID
+          else
+            echo "Nothing is running on port 8081"
+          fi
 
-      - name: Restart Docker Images
+      - name: Run camera app
+        run: make run
         working-directory: ./app
-        run: |
-          docker compose down
-          docker compose up -d
