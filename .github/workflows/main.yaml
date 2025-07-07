@@ -30,6 +30,10 @@ jobs:
             echo "Nothing is running on port 8081"
           fi
 
+      - name: Install dependencies
+        run: make
+        working-directory: ./app
+
       - name: Run camera app
         run: make run
         working-directory: ./app
