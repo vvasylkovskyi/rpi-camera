@@ -7,6 +7,7 @@ from picamera2.devices.imx500 import IMX500
 from threading import Condition
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import Output
+from fastapi import Request
 
 model = "/usr/share/imx500-models/imx500_network_mobilenet_v2.rpk"
 
@@ -46,8 +47,11 @@ async def health_check():
     
     return {"status": "healthy23"}
 
-def generate_frames():
+async def generate_frames(request: Request):
     while True:
+        if await request.is_disconnected():
+            print("Client disconnected, stopping stream")
+            break
         with output.condition:
             output.condition.wait()
             frame = output.frame
@@ -59,8 +63,8 @@ def generate_frames():
         time.sleep(1 / 30)  # 30 FPS
 
 @app.get("/video")
-def video():
+def video(request: Request):
     return StreamingResponse(
-        generate_frames(),
+        generate_frames(request),
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
