@@ -4,3 +4,5 @@
   command: apt install imx500-all
 - name: Install Picamera2
   command: apt install -y python3-picamera2
+- name: Install FFMPEG
+  command: apt install ffmpeg
