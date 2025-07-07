@@ -17,8 +17,10 @@ jobs:
   deploy_to_rpi:
     runs-on: [self-hosted, ARM64]
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
+      - name: Go to rpi-camera folder and pull latest changes
+        run: |
+          cd ~/git/rpi-camera
+          git pull
 
       - name: Kill whatever is using port 8081
         run: |
