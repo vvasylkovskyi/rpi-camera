@@ -1,0 +1,16 @@
+- name: Start Camera Server
+  hosts: all
+  become: true
+  vars_files:
+    - ../secrets.yml
+
+  vars:
+    ec2_user: "{{ ec2_user }}"
+    ec2_ip: "{{ ec2_ip }}"
+    remote_port: "{{ remote_port }}"
+    local_port: "{{ local_port }}"
+    ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
+    systemd_camera_service_name: "rpi-camera.service"
+
+  roles:
+    - start_camera_server

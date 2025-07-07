@@ -2,6 +2,7 @@
 
 Here we will talk about the step by step of the development of the raspberry pi camera. 
 
+![alt text](./raspberry-pi.png)
 
 ## Building Docker Image for Raspberry Pi
 

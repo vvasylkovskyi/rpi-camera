@@ -1,0 +1,35 @@
+- name: Create systemd service for camera app
+  copy:
+    dest: "/etc/systemd/system/{{ systemd_camera_service_name }}"
+    content: |
+      [Unit]
+      Description=Camera App Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User={{ ansible_user }}
+      WorkingDirectory=/home/{{ ansible_user }}/git/rpi-camera/app
+      ExecStart=/usr/bin/make run
+      Restart=on-failure
+      RestartSec=5
+      Environment=PYTHONUNBUFFERED=1
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start Camera App service
+  systemd:
+    name: "{{ systemd_camera_service_name }}"
+    enabled: yes
+    state: started
+
+- name: Restart Camera App service
+  systemd:
+    name: "{{ systemd_camera_service_name }}"
+    state: restarted
