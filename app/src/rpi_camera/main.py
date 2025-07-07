@@ -31,7 +31,7 @@ class StreamingOutput(Output):
             self.frame = frame
             self.condition.notify_all()
 
-imx500 = IMX500(model)
+# imx500 = IMX500(model)
 picam2 = Picamera2()
 output = StreamingOutput()
 encoder = JpegEncoder()
@@ -42,9 +42,9 @@ picam2.start_encoder(encoder, output)
 
 @app.get("/health-check")
 async def health_check():
-    device_id = imx500.get_device_id()
+    # device_id = imx500.get_device_id()
     
-    return {"status": "healthy", "camera": { "device_id": device_id }}
+    return {"status": "healthy"}
 
 def generate_frames():
     while True:
