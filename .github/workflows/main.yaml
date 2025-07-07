@@ -34,3 +34,4 @@ jobs:
       - name: Run camera app
         run: make run
         working-directory: ./app
+
