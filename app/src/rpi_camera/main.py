@@ -44,7 +44,7 @@ picam2.start_encoder(encoder, output)
 async def health_check():
     # device_id = imx500.get_device_id()
     
-    return {"status": "healthy2"}
+    return {"status": "healthy23"}
 
 def generate_frames():
     while True:
