@@ -1,2 +1,6 @@
+- name: Upgrade all packages
+  command: apt update && apt full-upgrade
 - name: Install IMX500 firmware
   command: apt install imx500-all
+- name: Install Picamera2
+  command: apt install -y python3-picamera2
