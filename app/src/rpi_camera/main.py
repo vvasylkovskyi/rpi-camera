@@ -64,7 +64,15 @@ async def generate_frames(request: Request):
 
 @app.get("/video")
 def video(request: Request):
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Connection": "close"
+    }
+        
     return StreamingResponse(
         generate_frames(request),
-        media_type="multipart/x-mixed-replace; boundary=frame"
+        media_type="multipart/x-mixed-replace; boundary=frame",
+        headers=headers
     )
