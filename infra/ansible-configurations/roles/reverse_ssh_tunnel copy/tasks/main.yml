@@ -1,0 +1,38 @@
+
+- name: Ensure OpenSSH client is installed
+  apt:
+    name: openssh-client
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Create systemd service for reverse SSH tunnel
+  copy:
+    dest: "/etc/systemd/system/{{ systemd_service_name }}"
+    content: |
+      [Unit]
+      Description=Reverse SSH Tunnel to EC2
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/bin/ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i {{ ssh_key_path }} -N -R {{ remote_port }}:localhost:{{ local_port }} {{ ec2_user }}@{{ ec2_ip }}
+      Restart=always
+      RestartSec=10
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start reverse SSH tunnel
+  systemd:
+    name: "{{ systemd_service_name }}"
+    enabled: yes
+    state: started
+
+- name: Restart reverse SSH tunnel
+  systemd:
+    name: "{{ systemd_service_name }}"
+    state: restarted
