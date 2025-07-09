@@ -22,6 +22,7 @@ def record_video():
     return {"status": "Recording stopped"}
 
 
+
 @videos_router.get("/stream")
 def stream_live_jpeg_frames():
     rpi_camera = RpiCamera()
@@ -38,5 +39,5 @@ def get_video_file(filename: str):
     file_path = f"/home/vvasylkovskyi/videos/{filename}"
     if not os.path.exists(file_path):
         return {"error": "File not found"}
-    
+
     return FileResponse(path=file_path, media_type="video/mp4", filename=filename)
