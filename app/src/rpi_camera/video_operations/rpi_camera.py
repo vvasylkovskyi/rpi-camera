@@ -19,7 +19,9 @@ class RpiCamera:
 
     def _init_camera(self):
         self.camera = Picamera2()
-        configuration = self.camera.create_video_configuration(main={"size": (640, 480)})
+        configuration = self.camera.create_video_configuration(
+            main={"size": (640, 480)}
+        )
         self.camera.configure(configuration)
         self.output = StreamingOutput()
 
@@ -41,7 +43,18 @@ class RpiCamera:
         print("Recording stopped, converting to mp4...")
 
         # Convert to MP4 using ffmpeg
-        subprocess.run(["ffmpeg", "-framerate", "30", "-i", filename_h264, "-c", "copy", filename_mp4])
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-framerate",
+                "30",
+                "-i",
+                filename_h264,
+                "-c",
+                "copy",
+                filename_mp4,
+            ]
+        )
 
         print(f"Video saved as: {filename_mp4}")
 

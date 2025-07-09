@@ -4,11 +4,17 @@ Here we will talk about the step by step of the development of the raspberry pi 
 
 ![alt text](./raspberry-pi.png)
 
-## Building Docker Image for Raspberry Pi
+## Raspberry Pi Camera Features
 
-First things first, we need to ensure that the docker image builds a server for the Pi. Raspberry Pi usually have different hardware architecture from the traditional linux systems like the ones that run on Github CI. This means that docker image built on Github CI will be build for architecture that is incompatible with raspberry pi hardware. So there is already a challenge here that we will tackle in the next section. There are several methods to solve this such as building using architecture simulation tools like QEMU. However, I never managed to make it work this way. 
+This device goal is to be a wild-life/security camera. As such, an obvious requirement is to be a camera. The camera doesn't have infinite baterry, nor device infinite storage capacity for the recordings, so all the ways to minimize the resource expenses should be employed. So for this reason, we will be using a [PIR sensor](https://www.electronicwings.com/sensors-modules/pir-sensor) - which is a motion detector, that we will use to enable/disable camera. Moreover the camera has AI capabilities, so the end goal will be to use AI for image classification or something of the sort. So the list of features/devices used is:
 
-The other way of solving this problem is to build docker image on the raspberry pi itself. This way the image will be built using same architecture as the device where the image is meant to run. Github offers to run their pipelines using self-hosted runners, so we will describe in the next section about how to make a Raspberry Pi a Github Runner. 
+  - AI Camera, using `Picamera2` for recording. Full documentation on how to use the `Picamera2` software is here - https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf.
+  - The Video stream recordings and live streaming will be always stored on device itself. The competent software services in the cloud will be used to access the camera to sync the on-device recordings with the cloud, further used for frontend access.
+  - The Video camera will be using `PIR sensor` module to decide camera start/stop behavior. Alternatively, we will explore native picamera pixel difference to detect motion using this example - https://github.com/raspberrypi/picamera2/blob/main/examples/capture_motion.py. The dowside of using camera for this is that it forces it to be constantly on and increase the battery consumption.
+    - Hardware about this integration can be found here - https://projects.raspberrypi.org/en/projects/physical-computing/11 
+  - The device will also integrate a PiJuice Battery module, which has API to access the battery levels. 
+    - API on this can be found here - https://github.com/PiSupply/PiJuice/tree/master/Software#pijuice-status 
+
 
 ### Promote Raspberry Pi to become a Github Runner
 
@@ -24,14 +30,18 @@ In `infra/ansible-configurations/roles/promote_to_github_runner/tasks/main.yml` 
 
 ## Deploying new app version on device restart
 
-The next things that I would want to do ideally is to make CI deploy the new image on my device. But for now I don't have device exposed, it only works in my local network. So the next best thing we can do is to force re-deploy on device restart. We can do it using ansible configuration - where we will create a `systemd` daemon that will pull docker image and start the container every time the device has to start. 
+The next things that I would want to do ideally is to make CI deploy new version of the service on my device. There are two things we can do to accomplish that: 
 
-This can be found at `infra/ansible-configurations/roles/docker_start_container_on_boot/tasks/main.yml`. 
+  - Create a system service that starts RPI on device start. This will ensure that the device starts with the latest version of the code. We can do it using ansible configuration - where we will create a `systemd` daemon that will pull docker image and start the container every time the device has to start. 
+  - On Git Push, deploy the latest code on the device, and restart service. 
 
-Once you have the script, run `ansible-playbook -i inventory/all.yml playbooks/playbook.yml --vault-password-file .vault_pass.txt`. 
+### Create a system service that starts RPI on device start
 
-Restart the Rpi device and observe that your server has reloaded, and with the new version of the app.
+This can be found at `infra/ansible-configurations/roles/start_camera_server/tasks/main.yml`. Once you have the script, run `ansible-playbook -i inventory/all.yml playbooks/playbook.yml --vault-password-file .vault_pass.txt`. Restart the Rpi device and observe that your server has reloaded, and with the new version of the app.
 
+### Deploy on Git Push
+
+We are using github actions for this. On every new commit in `main`, the `.github/workflows/main.yml`. Note since this CI runs on the device itself because of [this](#ansible-code-to-promote-raspberry-pi-to-github-runner), we assume that the repo has been cloned, and we just navigate to the repo and `git pull` and then `make run` to start the device. We also assume that the `ssh agent` and `ssh key for github` are correctly configured.
 
 ## Device Setup workflow 
 
@@ -120,6 +130,8 @@ def video():
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
 ```
+
+Note, this code has evolved over time and is no longer the same, but this is the minimal example. 
 
 ### Receiving Video Stream on Frontend web app 
 
