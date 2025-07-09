@@ -1,6 +1,7 @@
 from threading import Condition
 from picamera2.outputs import Output
 
+
 class StreamingOutput(Output):
     def __init__(self):
         super().__init__()
