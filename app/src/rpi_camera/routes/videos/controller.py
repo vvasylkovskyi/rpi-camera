@@ -1,9 +1,7 @@
 import os
 
-from fastapi import FastAPI, Request, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import  APIRouter
 from fastapi.responses import StreamingResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
 
 from rpi_camera.video_operations.rpi_camera import RpiCamera
 
@@ -11,30 +9,31 @@ model = "/usr/share/imx500-models/imx500_network_mobilenet_v2.rpk"
 
 videos_router = APIRouter(prefix="/videos")
 
-@videos_router.get("/record-video")
+@videos_router.get("/start-recording")
 def record_video():
     rpi_camera = RpiCamera()
-    rpi_camera.record_mp4()
+    rpi_camera.start_recording()
+    return {"status": "Recording started"}
+
+@videos_router.get("/stop-recording")
+def record_video():
+    rpi_camera = RpiCamera()
+    rpi_camera.stop_recording()
+    return {"status": "Recording stopped"}
+
 
 @videos_router.get("/stream")
-def stream_live_jpeg_frames(request: Request):
-    headers = {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
-        "Connection": "close"
-    }
-
+def stream_live_jpeg_frames():
     rpi_camera = RpiCamera()
     rpi_camera.start_jpeg_camera()
+    rpi_camera.start_recording()
     
     return StreamingResponse(
         rpi_camera.generate_live_jpeg_frames(),
         media_type="multipart/x-mixed-replace; boundary=frame",
-        headers=headers
     )
 
-@videos_router.get("/{filename}")
+@videos_router.get("/get-recorded-mp4/{filename}")
 def get_video_file(filename: str):
     file_path = f"/home/vvasylkovskyi/videos/{filename}"
     if not os.path.exists(file_path):
