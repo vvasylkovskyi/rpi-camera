@@ -9,6 +9,7 @@
       [Service]
       Type=simple
       User={{ ansible_user }}
+      EnvironmentFile=/etc/rpi-camera.env
       WorkingDirectory=/home/{{ ansible_user }}/git/rpi-camera/app
       ExecStart=/usr/bin/make run
       Restart=on-failure
@@ -17,7 +18,7 @@
 
       [Install]
       WantedBy=multi-user.target
-    mode: '0644'
+    mode: "0644"
 
 - name: Reload systemd
   systemd:

@@ -1,7 +1,7 @@
 import os
 
 from rpi_camera.clients.aws_s3_client import S3Client
-from fastapi import  APIRouter
+from fastapi import APIRouter
 from fastapi.responses import StreamingResponse, FileResponse
 
 from rpi_camera.video_operations.rpi_camera import RpiCamera
@@ -10,11 +10,28 @@ model = "/usr/share/imx500-models/imx500_network_mobilenet_v2.rpk"
 
 videos_router = APIRouter(prefix="/videos")
 
+
 @videos_router.get("/start-recording")
 def record_video():
     rpi_camera = RpiCamera()
-    rpi_camera.start_recording()
-    return {"status": "Recording started"}
+    rpi_camera.record_mp4()
+
+
+@videos_router.get("/stop-camera")
+def stop_camera():
+    rpi_camera = RpiCamera()
+    rpi_camera.record_mp4()
+
+
+@videos_router.get("/stream")
+def stream_live_jpeg_frames(request: Request):
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Connection": "close",
+    }
+
 
 @videos_router.get("/stop-recording")
 def stop_recording_and_upload():
@@ -31,17 +48,17 @@ def stop_recording_and_upload():
     return {"status": "Stopped", "file": filename}
 
 
-
 # @videos_router.get("/stream")
 # def stream_live_jpeg_frames():
 #     rpi_camera = RpiCamera()
 #     rpi_camera.start_jpeg_camera()
 #     rpi_camera.start_recording()
-    
+
 #     return StreamingResponse(
 #         rpi_camera.generate_live_jpeg_frames(),
 #         media_type="multipart/x-mixed-replace; boundary=frame",
 #     )
+
 
 @videos_router.get("/get-recorded-mp4/{filename}")
 def get_video_file(filename: str):
@@ -50,6 +67,7 @@ def get_video_file(filename: str):
         return {"error": "File not found"}
 
     return FileResponse(path=file_path, media_type="video/mp4", filename=filename)
+
 
 @videos_router.get("/list")
 def list_mp4_files():

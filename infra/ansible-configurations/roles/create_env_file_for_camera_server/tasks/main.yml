@@ -1,0 +1,10 @@
+- name: Create environment file for FastAPI app
+  copy:
+    dest: /etc/rpi-camera.env
+    content: |
+      AWS_ACCESS_KEY_ID={{ aws_access_key_id }}
+      AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+      AWS_DEFAULT_REGION={{ aws_default_region }}
+    owner: root
+    group: root
+    mode: "0600"

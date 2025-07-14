@@ -1,4 +1,4 @@
-- name: Setup Raspberry Pi 
+- name: Setup Raspberry Pi
   hosts: all
   become: true
   vars_files:
@@ -11,7 +11,7 @@
     ec2_ip: "{{ ec2_ip }}"
     remote_port: "{{ remote_port }}"
     local_port: "{{ local_port }}"
-    runner_dir: "{{ runner_dir }}" 
+    runner_dir: "{{ runner_dir }}"
     rpi_user: "{{ rpi_user }}"
     runner_token: "{{ runner_token }}"
     ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
@@ -21,10 +21,13 @@
     runner_labels: "rpi,arm64"
     local_pubkey_path: "~/.ssh/raspberry_pi_4b_reverse_proxy_public_key.pub"
     systemd_service_name: "reverse-ssh-tunnel.service"
-
+    aws_access_key_id: "{{ aws_access_key_id }}"
+    aws_secret_access_key: "{{ aws_secret_access_key }}"
+    aws_default_region: "{{ aws_default_region }}"
 
   roles:
-    - setup
+    # - setup
+    - create_env_file_for_camera_server
     # - datadog
     # - camera_imx500
     # - promote_to_github_runner
