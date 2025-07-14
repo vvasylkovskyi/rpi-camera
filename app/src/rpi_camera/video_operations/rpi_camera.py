@@ -33,6 +33,7 @@ class RpiCamera:
         self.encoder = None
         self.output = StreamingOutput()
         self.camera.start()  # Start once for both
+        self.last_recorded_file = None
 
     def start_recording(self):
         if self.recording_thread and self.recording_thread.is_alive():
@@ -75,6 +76,7 @@ class RpiCamera:
             check=True
         )
 
+        self.last_recorded_file = filename_mp4
         print(f"Video saved as: {filename_mp4}")
 
     def stop_recording(self):
@@ -82,6 +84,7 @@ class RpiCamera:
             print("Stopping recording...")
             self.stop_event.set()
             self.recording_thread.join()
+            return self.last_recorded_file
         else:
             print("No recording in progress.")
                 
