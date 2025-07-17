@@ -32,7 +32,7 @@ jobs:
         run: |
           TAG=${{ github.sha }}
           echo "Using tag: $TAG"
-          docker build -f ./deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/vvasylkovskyi-video-service-web:$TAG .
+          docker build -f ./video-service-web/deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/vvasylkovskyi-video-service-web:$TAG .
           docker push ${{ secrets.DOCKER_USERNAME }}/vvasylkovskyi-video-service-web:$TAG
 
       - name: Set output tag
@@ -65,26 +65,3 @@ jobs:
           git add infra/terraform/terraform.tfvars
           git commit -m "Update docker_image_hash_video_service to ${{ needs.build_and_push.outputs.tag }}"
           git push origin main
-
-  terraform:
-    runs-on: ubuntu-latest
-
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: us-east-1
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
-
-      - name: Terraform Init
-        working-directory: ./infra/terraform
-        run: terraform init
-
-      - name: Terraform Apply
-        working-directory: ./infra/terraform
-        run: terraform apply --auto-approve
