@@ -132,4 +132,4 @@ typecheck:
 .PHONY: run
 run:
 	@echo "Starting the development server"
-	@PYTHONPATH=src $(POETRY) run uvicorn video_service_web.main:app --host 0.0.0.0 --port 8080 --reload
+	@PYTHONPATH=src $(POETRY) run uvicorn video_service_web.main:app --host 0.0.0.0 --port 4000 --reload

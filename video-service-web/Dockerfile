@@ -39,4 +39,4 @@ ENV PYTHONPATH="/app/src"
 EXPOSE 8080
 
 # Command to run the application
-CMD ["sh", "-c", "uvicorn video_service_web.main:app --host 0.0.0.0 --port 8080 --reload"]
+CMD ["sh", "-c", "uvicorn video_service_web.main:app --host 0.0.0.0 --port 4000 --reload"]
