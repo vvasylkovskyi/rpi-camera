@@ -17,7 +17,6 @@ jobs:
   deploy_to_rpi:
     runs-on: [self-hosted, ARM64]
     steps:
-
       - name: Pull latest code from rpi-camera
         run: |
           cd ~/git/rpi-camera
@@ -28,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: make
-        working-directory: ./app
+        working-directory: ./rpi-camera-software
 
       - name: Kill whatever is using port 8081
         run: |
@@ -39,4 +38,3 @@ jobs:
           else
             echo "Nothing is running on port 8081"
           fi
-
