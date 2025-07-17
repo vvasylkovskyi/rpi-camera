@@ -24,6 +24,14 @@
     aws_access_key_id: "{{ aws_access_key_id }}"
     aws_secret_access_key: "{{ aws_secret_access_key }}"
     aws_default_region: "{{ aws_default_region }}"
+    aws_iot_local_path: "{{ playbook_dir }}/../../aws_iot_ssl_credentials"
+    aws_iot_remote_path: "/home/{{ rpi_user }}/aws_iot"
+    aws_iot_core_endpoint: "{{ aws_iot_core_endpoint }}"
+    aws_iot_client_id: "{{ aws_iot_client_id }}"
+    aws_iot_path_to_cert: "{{ aws_iot_path_to_cert }}"
+    aws_iot_path_to_key: "{{ aws_iot_path_to_key }}"
+    aws_iot_path_to_root_cert: "{{ aws_iot_path_to_root_cert }}"
+    aws_iot_mqtt_topic: "{{ aws_iot_mqtt_topic }}"
 
   roles:
     # - setup
@@ -32,3 +40,4 @@
     # - camera_imx500
     # - promote_to_github_runner
     # - generate_ssh_key_for_reverse_proxy_access
+    # - upload_aws_iot_secrets

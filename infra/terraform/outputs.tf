@@ -1,9 +1,22 @@
-output "ec2_ip_address" {
-  value       = module.ec2.public_ip
-  description = "The Elastic IP address allocated to the EC2 instance."
+output "certificate_pem" {
+  value     = aws_iot_certificate.device_cert.certificate_pem
+  sensitive = true
 }
 
-output "ec2_domain_name" {
-  value       = module.aws_route53_record.dns_record
-  description = "The Elastic IP address allocated to the EC2 instance."
+output "private_key" {
+  value     = aws_iot_certificate.device_cert.private_key
+  sensitive = true
+}
+
+output "public_key" {
+  value     = aws_iot_certificate.device_cert.public_key
+  sensitive = true
+}
+
+output "certificate_arn" {
+  value = aws_iot_certificate.device_cert.arn
+}
+
+output "iot_endpoint" {
+  value = data.aws_iot_endpoint.iot_endpoint.endpoint_address
 }

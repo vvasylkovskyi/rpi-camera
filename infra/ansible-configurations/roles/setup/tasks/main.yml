@@ -1,33 +1,33 @@
-# - name: Update package list
-#   command: apt update
+- name: Update package list
+  command: apt update
 
-# - name: Upgrade all packages
-#   command: apt upgrade -y
+- name: Upgrade all packages
+  command: apt upgrade -y
 
 - name: Install lsof
   command: apt install lsof
 
-# - name: Install Python 3 and pip
-#   apt:
-#     name:
-#       - python3
-#       - python3-pip
-#     state: latest
-#     update_cache: yes
+- name: Install Python 3 and pip
+  apt:
+    name:
+      - python3
+      - python3-pip
+    state: latest
+    update_cache: yes
 
-# - name: Ensure en_US.UTF-8 locale is present
-#   lineinfile:
-#     path: /etc/locale.gen
-#     regexp: '^#?en_US.UTF-8 UTF-8'
-#     line: 'en_US.UTF-8 UTF-8'
+- name: Ensure en_US.UTF-8 locale is present
+  lineinfile:
+    path: /etc/locale.gen
+    regexp: "^#?en_US.UTF-8 UTF-8"
+    line: "en_US.UTF-8 UTF-8"
 
-# - name: Generate locale
-#   command: locale-gen
+- name: Generate locale
+  command: locale-gen
 
-# - name: Set system locale to en_US.UTF-8
-#   copy:
-#     dest: /etc/default/locale
-#     content: |
-#       LANG=en_US.UTF-8
-#       LC_ALL=en_US.UTF-8
-#       LANGUAGE=en_US.UTF-8
+- name: Set system locale to en_US.UTF-8
+  copy:
+    dest: /etc/default/locale
+    content: |
+      LANG=en_US.UTF-8
+      LC_ALL=en_US.UTF-8
+      LANGUAGE=en_US.UTF-8

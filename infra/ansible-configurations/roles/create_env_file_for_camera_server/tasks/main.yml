@@ -2,9 +2,15 @@
   copy:
     dest: /etc/rpi-camera.env
     content: |
-      AWS_ACCESS_KEY_ID={{ aws_access_key_id }}
-      AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
-      AWS_DEFAULT_REGION={{ aws_default_region }}
-    owner: root
-    group: root
+      export AWS_ACCESS_KEY_ID={{ aws_access_key_id }}
+      export AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+      export AWS_DEFAULT_REGION={{ aws_default_region }}
+      export AWS_IOT_CORE_ENDPOINT={{ aws_iot_core_endpoint }}
+      export AWS_IOT_CLIENT_ID={{ aws_iot_client_id }}
+      export AWS_IOT_PATH_TO_CERT={{ aws_iot_path_to_cert }}
+      export AWS_IOT_PATH_TO_KEY={{ aws_iot_path_to_key }}
+      export AWS_IOT_PATH_TO_ROOT_CERT={{ aws_iot_path_to_root_cert }}
+      export AWS_IOT_MQTT_TOPIC={{ aws_iot_mqtt_topic }}
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: "0600"

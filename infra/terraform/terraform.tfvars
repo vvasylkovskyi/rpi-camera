@@ -1,11 +1,2 @@
-availability_zone   = "us-east-1a"
-instance_ami        = "ami-09e67e426f25ce0d7"
-instance_type       = "t2.micro"
-domain_name         = "raspberry4b.viktorvasylkovskyi.com"
-container_port      = 8080
-route53_zone_id     = "viktorvasylkovskyi.com"
-lock_table          = "vvasylkovskyi-raspberry4b-terraform-state-backend"
-backend_bucket      = "vvasylkovskyi-raspberry4b-terraform-state-backend"
-aws_region          = "us-east-1"
-ssh_public_key_name = "raspberry_pi_4b_reverse_proxy_public_key"
-alb_name            = "raspberrypi-4b"
+lock_table          = "vvasylkovskyi-raspberry4b-camera-terraform-state-backend"
+backend_bucket      = "vvasylkovskyi-raspberry4b-camera-terraform-state-backend"

@@ -175,3 +175,5 @@ src/mock_producer/events.json
 src/mocks
 
 .terraform
+
+aws_iot_ssl_credentials

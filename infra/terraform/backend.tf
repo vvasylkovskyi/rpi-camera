@@ -15,9 +15,9 @@ resource "aws_dynamodb_table" "terraform_lock" {
 
 terraform {
   backend "s3" {
-    bucket         = "vvasylkovskyi-raspberry4b-terraform-state-backend"
+    bucket         = "vvasylkovskyi-raspberry4b-camera-terraform-state-backend"
     key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform_state"
+    dynamodb_table = "vvasylkovskyi-raspberry4b-camera-terraform-state-backend"
   }
 }

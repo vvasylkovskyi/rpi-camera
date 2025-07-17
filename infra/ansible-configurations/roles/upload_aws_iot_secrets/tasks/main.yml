@@ -1,0 +1,31 @@
+- name: Ensure remote directory exists
+  file:
+    path: "{{ aws_iot_remote_path }}"
+    state: directory
+    owner: "{{ rpi_user }}"
+    group: "{{ rpi_user }}"
+    mode: "0755"
+
+- name: Upload device certificate
+  copy:
+    src: "{{ aws_iot_local_path }}/device.pem.crt"
+    dest: "{{ aws_iot_remote_path }}/device.pem.crt"
+    owner: "{{ rpi_user }}"
+    group: "{{ rpi_user }}"
+    mode: "0644"
+
+- name: Upload private key
+  copy:
+    src: "{{ aws_iot_local_path }}/private.pem.key"
+    dest: "{{ aws_iot_remote_path }}/private.pem.key"
+    owner: "{{ rpi_user }}"
+    group: "{{ rpi_user }}"
+    mode: "0600"
+
+- name: Upload Amazon Root CA
+  copy:
+    src: "{{ aws_iot_local_path }}/AmazonRootCA1.pem"
+    dest: "{{ aws_iot_remote_path }}/AmazonRootCA1.pem"
+    owner: "{{ rpi_user }}"
+    group: "{{ rpi_user }}"
+    mode: "0644"
