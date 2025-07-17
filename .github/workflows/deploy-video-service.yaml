@@ -14,7 +14,7 @@ on:
         required: true
 
 jobs:
-  build_and_push:
+  video_service_web_build_and_push:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.set_tag.outputs.tag }}
