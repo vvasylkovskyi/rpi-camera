@@ -3,7 +3,7 @@ services:
     container_name: video-service-web
     build:
       context: .
-      dockerfile: ./deploy/Dockerfile
+      dockerfile: ./Dockerfile
   #   # image: vvasylkovskyi1/vvasylkovskyi-video-service-web:latest
   #   # restart: '${DOCKER_RESTART_POLICY:-unless-stopped}'
     env_file:

@@ -33,7 +33,7 @@ RUN poetry config virtualenvs.create false && \
 COPY . .
 
 # Add to python path
-ENV PYTHONPATH="${PYTHONPATH}:/app/src"
+ENV PYTHONPATH="/app/src"
 
 # Expose the application port
 EXPOSE 8080
