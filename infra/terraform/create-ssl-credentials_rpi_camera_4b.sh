@@ -2,19 +2,15 @@
 
 set -euo pipefail
 
-OUTPUT_DIR="../aws_iot_ssl_credentials"
+OUTPUT_DIR="../aws_iot_ssl_credentials_raspberry_pi"
 
 mkdir -p "$OUTPUT_DIR"
 
 echo "Saving device.pem.crt..."
-terraform output -raw certificate_pem > "$OUTPUT_DIR/device.pem.crt"
+terraform output -raw iot_thing_raspberry_pi_4b_certificate_pem > "$OUTPUT_DIR/device.pem.crt"
 
 echo "Saving private.pem.key..."
-terraform output -raw private_key > "$OUTPUT_DIR/private.pem.key"
-
-# Optional: save public key
-# echo "Saving public.pem.key..."
-# terraform output -raw public_key > "$OUTPUT_DIR/public.pem.key"
+terraform output -raw iot_thing_raspberry_pi_4b_private_key > "$OUTPUT_DIR/private.pem.key"
 
 echo "Downloading AmazonRootCA1.pem..."
 curl -sS https://www.amazontrust.com/repository/AmazonRootCA1.pem -o "$OUTPUT_DIR/AmazonRootCA1.pem"

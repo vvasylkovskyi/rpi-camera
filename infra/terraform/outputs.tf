@@ -1,22 +1,41 @@
-output "certificate_pem" {
-  value     = aws_iot_certificate.device_cert.certificate_pem
+output "iot_thing_raspberry_pi_4b_certificate_pem" {
+  value     = module.iot_thing_raspberry_pi_4b.certificate_pem
   sensitive = true
 }
 
-output "private_key" {
-  value     = aws_iot_certificate.device_cert.private_key
+output "iot_thing_raspberry_pi_4b_private_key" {
+  value     = module.iot_thing_raspberry_pi_4b.private_key
   sensitive = true
 }
 
-output "public_key" {
-  value     = aws_iot_certificate.device_cert.public_key
+output "iot_thing_raspberry_pi_4b_public_key" {
+  value     = module.iot_thing_raspberry_pi_4b.public_key
   sensitive = true
 }
 
-output "certificate_arn" {
-  value = aws_iot_certificate.device_cert.arn
+output "iot_thing_raspberry_pi_4b_certificate_arn" {
+  value = module.iot_thing_raspberry_pi_4b.certificate_arn
+}
+
+output "iot_thing_video_service_web_certificate_pem" {
+  value     = module.iot_thing_video_service.certificate_pem
+  sensitive = true
+}
+
+output "iot_thing_video_service_web_private_key" {
+  value     = module.iot_thing_video_service.private_key
+  sensitive = true
+}
+
+output "iot_thing_video_service_web_public_key" {
+  value     = module.iot_thing_video_service.public_key
+  sensitive = true
+}
+
+output "iot_thing_video_service_web_certificate_arn" {
+  value = module.iot_thing_video_service.certificate_arn
 }
 
 output "iot_endpoint" {
-  value = data.aws_iot_endpoint.iot_endpoint.endpoint_address
+  value = module.iot_thing_raspberry_pi_4b.iot_endpoint
 }

@@ -1,17 +1,17 @@
-resource "aws_iot_thing" "thing" {
-  name = "raspberry-pi-camera"
-}
-
-resource "aws_iot_policy" "publish_policy" {
-  name = "RaspberryPiPublishPolicy"
-  policy = jsonencode({
+module "iot_thing_raspberry_pi_4b" {
+  source = "git::https://github.com/vvasylkovskyi/vvasylkovskyi-infra.git//modules/iot-thing"
+  iot_thing_name  = "raspberry-pi-camera-4b"
+  iot_policy_name = "raspberry-pi-camera-4b-policy"
+  iot_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
       {
         "Effect": "Allow",
         "Action": [
           "iot:Connect",
-          "iot:Publish"
+          "iot:Publish",
+          "iot:Subscribe",
+          "iot:Receive"
         ],
         "Resource": "*"
       }
@@ -19,15 +19,23 @@ resource "aws_iot_policy" "publish_policy" {
   })
 }
 
-resource "aws_iot_certificate" "device_cert" {
-  active = true
-}
-resource "aws_iot_thing_principal_attachment" "attach_cert" {
-  thing       = aws_iot_thing.thing.id
-  principal   = aws_iot_certificate.device_cert.arn
-}
-
-resource "aws_iot_policy_attachment" "attach_policy" {
-  policy     = aws_iot_policy.publish_policy.name
-  target     = aws_iot_certificate.device_cert.arn
+module "iot_thing_video_service" {
+  source = "git::https://github.com/vvasylkovskyi/vvasylkovskyi-infra.git//modules/iot-thing"
+  iot_thing_name  = "video-service-web"
+  iot_policy_name = "video-service-web-policy"
+  iot_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "iot:Connect",
+          "iot:Publish",
+          "iot:Subscribe",
+          "iot:Receive"
+        ],
+        "Resource": "*"
+      }
+    ]
+  })
 }

@@ -176,4 +176,5 @@ src/mocks
 
 .terraform
 
-aws_iot_ssl_credentials
+aws_iot_ssl_credentials_raspberry_pi
+aws_iot_ssl_credentials_video_service_web
