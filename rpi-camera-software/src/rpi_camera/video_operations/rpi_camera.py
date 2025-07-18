@@ -34,7 +34,7 @@ class RpiCamera:
         self.recording_task = None
         self.last_recorded_file_path = None
 
-    def start_recording(self):
+    def start_video(self):
         if self.recording_task:
             self.logger.warning("Already recording")
             return False
@@ -83,9 +83,9 @@ class RpiCamera:
         
         self.logger.info(f"FFmpeg success: {stdout.decode()}")
 
-    async def stop_recording(self):
+    async def stop_video(self):
         if self.recording_task:
-            self.logger.info("Stopping recording...")
+            self.logger.info("Stopping video...")
             self.stop_event.set()
             await self.recording_task  # Wait for graceful finish
             self.recording_task = None

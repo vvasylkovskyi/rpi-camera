@@ -20,7 +20,7 @@ logger = Logger("videos_router")
 async def record_video():
     logger.info("Received request to start recording")
     rpi_camera = RpiCamera()
-    status = rpi_camera.start_recording()
+    status = rpi_camera.start_video()
     if not status:
         logger.warning("Attempt to start recording but already in progress")
         return {"status": "Recording already in progress."}
@@ -34,7 +34,7 @@ async def stop_recording_and_upload():
     rpi_camera = RpiCamera()
     mqtt_client = AwsMQTTClient()
 
-    filename = await rpi_camera.stop_recording()
+    filename = await rpi_camera.stop_video()
 
     if filename:
         logger.info(f"Recording stopped, file: {filename}")

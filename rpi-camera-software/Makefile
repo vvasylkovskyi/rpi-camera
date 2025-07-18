@@ -131,5 +131,13 @@ typecheck:
 
 .PHONY: run
 run:
-	@echo "Starting the development server"
-	@PYTHONPATH=src $(POETRY) run uvicorn rpi_camera.main:rpi-camera-software --host 0.0.0.0 --port 8081 --reload
+	@PYTHONPATH=src $(POETRY) run python src/rpi_camera/main.py
+
+.PHONY: run-mqtt
+run-mqtt:
+	@PYTHONPATH=src $(POETRY) run python src/rpi_camera/mqtt_main.py
+
+.PHONY: run-terminal
+run-terminal:
+	@echo "Starting interactive terminal controller"
+	@PYTHONPATH=src $(POETRY) run python -m rpi_camera.terminal_main

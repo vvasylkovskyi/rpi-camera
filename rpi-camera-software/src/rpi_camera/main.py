@@ -1,55 +1,33 @@
 import asyncio
-import os
-from rpi_camera.clients.aws_mqtt_client import AwsMQTTClient
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from rpi_camera.routes.routes import create_router
-from rpi_camera.logger.logger import Logger 
+import signal
+from rpi_camera.video_operations.rpi_camera import RpiCamera
+from rpi_camera.logger.logger import Logger
 
 logger = Logger("main")
 
-app = FastAPI(title="RPI Camera API")
-
-app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
-)
-
-app.include_router(create_router())
-
-# Initialize the MQTT client
-mqtt_client = AwsMQTTClient()
-
-# Keep a reference to the background task
-mqtt_task: asyncio.Task | None = None
-
-
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Starting up application...")
+async def main():
+    logger.info("Starting RPI Camera...")
+    rpi_camera = RpiCamera()
+    ## TODO: Do camera things    
     try:
-        await mqtt_client.connect()
-        logger.success("MQTT client connected successfully.")
+
+        # Run until stopped, e.g. by Ctrl+C
+        logger.info("Running Camera Module... Press Ctrl+C to exit.")
+        stop_event = asyncio.Event()
+
+        def shutdown_handler():
+            logger.info("Shutdown signal received, stopping...")
+            stop_event.set()
+
+        loop = asyncio.get_running_loop()
+        loop.add_signal_handler(signal.SIGINT, shutdown_handler)
+        loop.add_signal_handler(signal.SIGTERM, shutdown_handler)
+
+        await stop_event.wait()
+
     except Exception as e:
-        logger.error(f"MQTT client connection failed: {e}")
-
-    # # Launch the MQTT message handler loop as a background task
-    # global mqtt_task
-    # mqtt_task = asyncio.create_task(mqtt_client.handle_messages())
-    # logger.info("MQTT message handler task started.")
+        logger.error(f"Error in Camera Module: {e}")
 
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    logger.info("Shutting down application...")
-    if mqtt_task:
-        logger.info("Cancelling MQTT message handler task...")
-        mqtt_task.cancel()
-        try:
-            await mqtt_task
-        except asyncio.CancelledError:
-            logger.info("MQTT message handler task cancelled successfully.")
-    try:
-        await mqtt_client.disconnect()
-        logger.success("MQTT client disconnected successfully.")
-    except Exception as e:
-        logger.error(f"MQTT client disconnect failed: {e}")
+if __name__ == "__main__":
+    asyncio.run(main())
