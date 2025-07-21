@@ -35,9 +35,10 @@
 
   roles:
     # - setup
-    - create_env_file_for_camera_server
+    # - create_env_file_for_camera_server
     # - datadog
     # - camera_imx500
     # - promote_to_github_runner
     # - generate_ssh_key_for_reverse_proxy_access
-    - upload_aws_iot_secrets
+    # - upload_aws_iot_secrets
+    - install_ros
