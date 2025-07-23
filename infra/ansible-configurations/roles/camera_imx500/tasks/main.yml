@@ -1,8 +1,18 @@
 - name: Upgrade all packages
-  command: apt update && apt full-upgrade
-- name: Install IMX500 firmware
-  command: apt install imx500-all
+  shell: apt update && apt full-upgrade -y
+
+# - name: Install IMX500 firmware
+#   apt:
+#     name: imx500-all
+#     state: present
+#     update_cache: yes
+
 - name: Install Picamera2
-  command: apt install -y python3-picamera2
+  apt:
+    name: python3-picamera2
+    state: present
+
 - name: Install FFMPEG
-  command: apt install ffmpeg
+  apt:
+    name: ffmpeg
+    state: present

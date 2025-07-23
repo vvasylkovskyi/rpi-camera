@@ -4,13 +4,9 @@ Once your Raspberry Pi hardware order is complete, the next major step is config
 
 Having configured many Raspberry Pi devices in the past, I can confidently say that doing it manually is time-consuming and repetitive. Ansible changes that by letting you define your setup in code and reapply it with ease. Let's dive in!
 
-## Step 1: Installing Raspberry Pi OS Lite on an SD Card
+## Step 1: Installing Raspberry Pi OS Lite
 
-Begin by downloading the OS image:
-
-* Raspberry Pi OS Lite (64-bit): [Download here](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13/2025-05-13-raspios-bookworm-arm64-lite.img.xz)
-
-Make sure the OS version matches your hardware’s architecture (e.g., ARM64).
+* * Raspberry Pi OS Lite (64-bit): [Download here](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13/2025-05-13-raspios-bookworm-arm64-lite.img.xz). Make sure the OS version matches your hardware’s architecture (e.g., ARM64). Follow the steps below for [Flashing the OS Image](#flash-the-os-image).
 
 ### Flash the OS Image
 
@@ -30,7 +26,11 @@ Since OS Lite has no graphical interface, we need to enable SSH and configure cr
    * ✅ Enable SSH
    * 🔘 Select "Only allow public-key authentication"
 
-2. Generate an SSH key pair on your Mac:
+You are going to have to create a private/public ssh key pairs on your terminal: 
+
+### Creating SSH Key pair
+
+1. Generate an SSH key pair on your Mac:
 
 ```bash
 ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -38,7 +38,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 
 Press Enter to accept the default file path (`~/.ssh/<your-key-name>`) and choose a passphrase if desired.
 
-3. Copy the contents of your public key:
+2. Copy the contents of your public key:
 
 ```bash
 cat ~/.ssh/<your-key-name>.pub
@@ -47,6 +47,8 @@ cat ~/.ssh/<your-key-name>.pub
 Paste this into the SSH public key field in the Raspberry Pi Imager settings.
 
 ### Define Username and Network
+
+Back in raspberrry pi imager: 
 
 * Set a username (e.g., `pi`) and optionally leave the password blank.
 * Configure wireless LAN settings (SSID, password, and country).
@@ -68,12 +70,13 @@ To test the setup:
 2. Add your private key to the SSH agent:
 
 ```bash
+# First, enable the ssh agent
+eval "$(ssh-agent -s)" 
+
+# Then add the key that you created to the agent
 ssh-add ~/.ssh/<your-private-key>
-```
 
-3. Connect via hostname or IP:
-
-```bash
+# Finally, connect via hostname or IP to your raspberrypi
 ssh pi@raspberrypi.local
 ```
 

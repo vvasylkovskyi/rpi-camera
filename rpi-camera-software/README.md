@@ -18,7 +18,7 @@ This device goal is to be a wild-life/security camera. As such, an obvious requi
 
 ### Promote Raspberry Pi to become a Github Runner
 
-You can read this article [Setting Up a Raspberry Pi 4B as a GitHub Actions Self-Hosted Runner](https://www.vvasylkovskyi.com/posts/configuring-rpi-as-github-runner). This explains very well about the manual steps required to make a raspberry pi a runner. We can also automate this process with ansible. 
+You can read this article [Setting Up a Raspberry Pi 4B as a GitHub Actions Self-Hosted Runner](https://www.vvasylkovskyi.com/posts/configuring-rpi-as-github-runner). This explains very well about the manual steps required to make a raspberry pi a runner. We can also automate this process with ansible. This is usually done via ansible if you followed the steps before in 
 
 #### Ansible code to promote raspberry pi to Github Runner 
 

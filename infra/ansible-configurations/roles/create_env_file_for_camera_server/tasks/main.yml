@@ -1,4 +1,4 @@
-- name: Create environment file for FastAPI app
+- name: Create environment file for Raspberry Pi Device app
   copy:
     dest: /etc/rpi-camera.env
     content: |
