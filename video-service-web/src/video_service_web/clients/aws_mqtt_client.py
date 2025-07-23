@@ -4,6 +4,7 @@ import traceback
 from awscrt import io, mqtt
 from awsiot import mqtt_connection_builder
 from video_service_web.logger.logger import Logger
+from video_service_web.utils.base64 import Base64
 
 
 class AwsMQTTClient:
@@ -19,6 +20,12 @@ class AwsMQTTClient:
             cls._instance.PATH_TO_CERT = os.environ["AWS_IOT_PATH_TO_CERT"]
             cls._instance.PATH_TO_KEY = os.environ["AWS_IOT_PATH_TO_KEY"]
             cls._instance.PATH_TO_ROOT = os.environ["AWS_IOT_PATH_TO_ROOT_CERT"]
+
+            Base64.write_if_missing(cls._instance.PATH_TO_CERT, "AWS_IOT_CERT_BASE64")
+            Base64.write_if_missing(cls._instance.PATH_TO_KEY, "AWS_IOT_KEY_BASE64")
+            Base64.write_if_missing(
+                cls._instance.PATH_TO_ROOT, "AWS_IOT_ROOT_CERT_BASE64"
+            )
 
             cls._instance.event_loop_group = io.EventLoopGroup(1)
             cls._instance.host_resolver = io.DefaultHostResolver(
