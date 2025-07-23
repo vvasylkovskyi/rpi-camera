@@ -4,31 +4,21 @@ import traceback
 from awscrt import io, mqtt
 from awsiot import mqtt_connection_builder
 from video_service_web.logger.logger import Logger
-from video_service_web.utils.base64 import Base64
-from video_service_web.mqtt_topics.mqtt_topics_manager import MqttTopicManager
 
 
 class AwsMQTTClient:
     _instance = None
     logger = Logger("AwsMQTTClient")
-    topic_manager = MqttTopicManager()
 
-    def __new__(cls):
+    def __new__(cls, client_id):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
             cls._instance.ENDPOINT = os.environ["AWS_IOT_CORE_ENDPOINT"]
-            cls._instance.CLIENT_ID = os.environ.get("AWS_IOT_CLIENT_ID")
+            cls._instance.CLIENT_ID = client_id or os.environ.get("AWS_IOT_CLIENT_ID")
             cls._instance.PATH_TO_CERT = os.environ["AWS_IOT_PATH_TO_CERT"]
             cls._instance.PATH_TO_KEY = os.environ["AWS_IOT_PATH_TO_KEY"]
             cls._instance.PATH_TO_ROOT = os.environ["AWS_IOT_PATH_TO_ROOT_CERT"]
-            cls._instance.TOPIC = os.environ.get("AWS_IOT_MQTT_TOPIC")
-
-            Base64.write_if_missing(cls._instance.PATH_TO_CERT, "AWS_IOT_CERT_BASE64")
-            Base64.write_if_missing(cls._instance.PATH_TO_KEY, "AWS_IOT_KEY_BASE64")
-            Base64.write_if_missing(
-                cls._instance.PATH_TO_ROOT, "AWS_IOT_ROOT_CERT_BASE64"
-            )
 
             cls._instance.event_loop_group = io.EventLoopGroup(1)
             cls._instance.host_resolver = io.DefaultHostResolver(
@@ -67,46 +57,41 @@ class AwsMQTTClient:
             self.logger.debug(traceback.format_exc())
             raise
 
-    async def publish(self, message: str):
-        self.logger.info(f"Publishing message to topic '{self.TOPIC}': {message}")
+    def publish(self, topic, message: str):
+        # Publishes message asynchronously
+        self.logger.info(f"Publishing message to topic '{topic}': {message}")
 
         try:
-            publish_future, packet_id = self.mqtt_connection.publish(
-                topic=self.TOPIC, payload=message, qos=mqtt.QoS.AT_LEAST_ONCE
+            _, packet_id = self.mqtt_connection.publish(
+                topic=topic, payload=message, qos=mqtt.QoS.AT_LEAST_ONCE
             )
 
-            # This will not block the event loop
-            loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, publish_future.result)
             self.logger.success(
-                f"Message published to topic '{self.TOPIC}' with packet ID {packet_id}"
+                f"Message published to topic '{topic}' with packet ID {packet_id}"
             )
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to publish message to topic '{self.TOPIC}': {e}")
+            self.logger.error(f"Failed to publish message to topic '{topic}': {e}")
             self.logger.debug(traceback.format_exc())
             return False
 
-    async def subscribe(self):
-        self.logger.info(f"Subscribing to topic '{self.TOPIC}'...")
-
-        def on_message_received(topic, payload, **kwargs):
-            self.topic_manager.handle_message(payload)
+    async def subscribe(self, topic, callback):
+        self.logger.info(f"Subscribing to topic '{topic}'...")
 
         try:
             subscribe_future, packet_id = self.mqtt_connection.subscribe(
-                topic=self.TOPIC,
+                topic=topic,
                 qos=mqtt.QoS.AT_LEAST_ONCE,
-                callback=on_message_received,
+                callback=callback,
             )
 
             await asyncio.wrap_future(subscribe_future)
             self.logger.success(
-                f"Successfully subscribed to topic '{self.TOPIC}' with packet ID {packet_id}"
+                f"Successfully subscribed to topic '{topic}' with packet ID {packet_id}"
             )
         except Exception as e:
-            self.logger.error(f"Failed to subscribe to topic '{self.TOPIC}': {e}")
+            self.logger.error(f"Failed to subscribe to topic '{topic}': {e}")
             self.logger.debug(traceback.format_exc())
             raise
 
