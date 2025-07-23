@@ -1,14 +1,10 @@
 name: CI
 
-# 1
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the master branch
   push:
     branches: [main]
-    # Allows you to run this workflow manually from the Actions tab
-    workflow_dispatch:
-      inputs:
+  workflow_dispatch:
+    inputs:
       version:
         description: "Deploy vvasylkovskyi Video Service"
         required: true
@@ -23,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -51,7 +47,7 @@ jobs:
         run: |
           cd vvasylkovskyi-portfolio/infra/terraform
           FILE=terraform.tfvars
-          TAG=${{ needs.build_and_push.outputs.tag }}
+          TAG=${{ needs.video_service_web_build_and_push.outputs.tag }}
           echo "Replacing docker_image_hash_video_service with: $TAG"
           sed -i -E "s|(^\s*docker_image_hash_video_service\s*=\s*\")[^\"]*(\".*)|\1$TAG\2|" $FILE
           echo "--- Resulting terraform.tfvars ---"
@@ -62,6 +58,11 @@ jobs:
           cd vvasylkovskyi-portfolio
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add infra/terraform/terraform.tfvars
-          git commit -m "Update docker_image_hash_video_service to ${{ needs.build_and_push.outputs.tag }}"
-          git push origin main
+
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add infra/terraform/terraform.tfvars
+            git commit -m "Update docker_image_hash_video_service to ${{ needs.video_service_web_build_and_push.outputs.tag }}"
+            git push origin main
+          fi
