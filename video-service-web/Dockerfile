@@ -31,7 +31,7 @@ RUN poetry config virtualenvs.create false && \
     poetry install --no-root --only main
 
 # Copy the rest of the application
-COPY . .
+COPY ./src ./
 
 # Create HLS directory for video segments and manifest
 RUN mkdir -p /app/hls
