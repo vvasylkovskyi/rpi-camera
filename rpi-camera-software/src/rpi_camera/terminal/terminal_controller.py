@@ -1,20 +1,16 @@
-import asyncio
-import threading
 from rpi_camera.logger.logger import Logger  
+from rpi_camera.clients.aws_mqtt_client import AwsMQTTClient
+from rpi_camera.mqtt.topics import MQTTTopics
+from rpi_camera.mqtt.mqtt_clients import MQTTClients
+from rpi_camera.models.camera_control_event import CameraControlEvent, CameraAction
 
 class TerminalController:
-    def __init__(self, loop):
-        """
-        :param loop: asyncio event loop
-        :param video_controller: object with async start_video() and stop_video() methods
-        """
+    def __init__(self):
         self.logger = Logger("Terminal")
-        self.loop = loop
-        self._stop_thread = threading.Event()
+        self.mqtt_client = AwsMQTTClient(MQTTClients.TERMINAL.value)
 
     def start(self):
-        thread = threading.Thread(target=self._run_menu_loop, daemon=True)
-        thread.start()
+        self._run_menu_loop()
 
     def _run_menu_loop(self):
         self.logger.info("Terminal controller started. Waiting for user input...")
@@ -22,10 +18,12 @@ class TerminalController:
             "\nPlease choose an option:\n"
             "1) Start Video\n"
             "2) Stop Video\n"
+            "3) Start Live Stream\n"
+            "4) Stop Live Stream\n"
             "Press Ctrl+C to quit. \n"
-            "Enter choice [1-2]: "
+            "Enter choice [1-4]: "
         )
-        while not self._stop_thread.is_set():
+        while True:
             try:
                 choice = input(menu_text).strip()
             except EOFError:
@@ -34,10 +32,19 @@ class TerminalController:
 
             if choice == "1":
                 self.logger.info("User selected: Start Video")
+                event = CameraControlEvent(action=CameraAction.START)
+                self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
             elif choice == "2":
                 self.logger.info("User selected: Stop Video")
+                event = CameraControlEvent(action=CameraAction.STOP)
+                self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
+            elif choice == "3":
+                self.logger.info("User selected: Start Live Stream")
+                event = CameraControlEvent(action=CameraAction.START_LIVE_STREAM)
+                self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
+            elif choice == "4":
+                self.logger.info("User selected: Stop Live Stream")
+                event = CameraControlEvent(action=CameraAction.STOP_LIVE_STREAM)
+                self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
             else:
-                self.logger.info(f"Invalid option '{choice}'. Please enter 1, 2, or 3.")
-
-    def stop(self):
-        self._stop_thread.set()
+                self.logger.info(f"Invalid option '{choice}'. Please enter 1, 2, 3, or 4.")
