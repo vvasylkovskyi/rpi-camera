@@ -1,11 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+import asyncio
+import json
 
 from video_service_web.logger.logger import Logger
-from video_service_web.ffmpeg.ffmpeg_service import FFmpegStreamingService
 from video_service_web.clients.aws_mqtt_client import AwsMQTTClient
 from video_service_web.models.camera_control_event import (
     CameraControlEvent,
     CameraAction,
+    WebRTCOffer,
 )
 from video_service_web.mqtt.topics import MQTTTopics
 from video_service_web.mqtt.mqtt_clients import MQTTClients
@@ -20,38 +22,72 @@ async def get_all_videos():
     return {"status": "All videos retrieved successfully"}
 
 
-@videos_router.get("/start-streaming-service")
-async def start_streaming_service():
-    ffmpeg_service = FFmpegStreamingService()
-    stream_url = f"/hls/{ffmpeg_service.STREAM_NAME}.m3u8"
+@videos_router.post("/start-webrtc")
+async def start_streaming_service(request: Request):
+    body = await request.json()
+    offer_type = body.get("type")
+    offer_sdp = body.get("sdp")
+
     mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
 
-    event = CameraControlEvent(action=CameraAction.START_LIVE_STREAM)
+    event = CameraControlEvent(
+        action=CameraAction.START_WEBRTC_STREAM,
+        webrtc_offer=WebRTCOffer(type=offer_type, sdp=offer_sdp),
+    )
+
     mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
+
+    # Future to be set when a matching MQTT message arrives
+    message_future = asyncio.get_event_loop().create_future()
 
     # Wait for 20 seconds to ensure the stream is available
-    success = await ffmpeg_service.start_and_wait(20)
+    # success = await ffmpeg_service.start_and_wait(20)
+    # Callback for MQTT subscription
+    def on_message_received(topic, payload, **kwargs):
+        try:
+            logger.info(f"Received MQTT message on topic {topic}, payload: {payload}")
+            data: CameraControlEvent = json.loads(payload.decode())
+            if (
+                not message_future.done()
+                and data["action"] == CameraAction.START_WEBRTC_STREAM_ANSWER.value
+            ):
+                message_future.set_result(data)
+        except Exception as e:
+            logger.error(f"MQTT message parse error: {e}")
 
-    if not success:
+    await mqtt_client.subscribe(
+        MQTTTopics.CAMERA_WEBCAM_STREAM.value, on_message_received
+    )
+
+    try:
+        response: CameraControlEvent = await asyncio.wait_for(
+            message_future, timeout=10
+        )
+        logger.info(
+            f"Received response from camera, sending to client: {response['webrtc_answer']}"
+        )
+        return {
+            "status": "success",
+            "webrtc_answer": response["webrtc_answer"],
+        }
+    except asyncio.TimeoutError:
         return {
             "status": "error",
-            "message": "Stream failed to become available in time",
+            "message": "Timed out waiting for camera response",
         }
 
-    return {
-        "status": "Video streaming service started successfully",
-        "stream_url": stream_url,
-    }
 
+@videos_router.get("/stop-webrtc")
+async def stop_webrtc():
 
-@videos_router.get("/stop-streaming-service")
-async def stop_streaming_service():
     mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
-    ffmpeg_service = FFmpegStreamingService()
-    ffmpeg_service.stop()
-    event = CameraControlEvent(action=CameraAction.START_WEBRTC_STREAM)
+
+    event = CameraControlEvent(
+        action=CameraAction.STOP_WEBRTC_STREAM,
+    )
+
     mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
-    ffmpeg_service.cleanup()
+
     return {
         "status": "Video streaming service stopped successfully",
     }
