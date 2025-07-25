@@ -1,6 +1,8 @@
+import asyncio
+
 from jsonschema import ValidationError
 from rpi_camera.video_operations.rpi_camera import RpiCamera
-from rpi_camera.models.camera_control_event import CameraControlEvent, CameraAction
+from rpi_camera.models.camera_control_event import CameraControlEvent, CameraAction, WebRTCOffer
 from rpi_camera.logger.logger import Logger
 from rpi_camera.clients.aws_mqtt_client import AwsMQTTClient
 from rpi_camera.models.video_event import VideoRecordingEvent
@@ -13,8 +15,8 @@ class RpiCameraControlTopicHandler:
         self.logger = Logger("RpiCameraControlTopicHandler")
         self.rpi_camera = RpiCamera()
         self.mqtt_client = AwsMQTTClient(MQTTClients.CAMERA.value)
-        
-    def handle_incoming_message(self, topic: str, message: str):
+
+    async def handle_incoming_message(self, topic: str, message: str):
         try:
             # Validate/parse the incoming payload into the CameraControlEvent model
             payload: CameraControlEvent = CameraControlEvent.parse_raw(message)
@@ -24,14 +26,16 @@ class RpiCameraControlTopicHandler:
 
         command = payload.action.value
         
+        
         if command == CameraAction.START.value:
             self.handle_start_video_event()
         elif command == CameraAction.STOP.value:
             self.handle_stop_video_event()
-        elif command == CameraAction.START_LIVE_STREAM.value:
-            self.handle_start_live_stream_event()
-        elif command == CameraAction.STOP_LIVE_STREAM.value:
-            self.handle_stop_live_stream_event()
+        elif command == CameraAction.START_WEBRTC_STREAM.value:
+            webrtc_offer = payload.webrtc_offer
+            await self.handle_start_webrtc_stream_event(webrtc_offer)
+        elif command == CameraAction.STOP_WEBRTC_STREAM.value:
+            await self.handle_stop_webrtc_stream_event()
         else:
             self.logger.error(f"Unknown command: {command}")
                     
@@ -59,11 +63,21 @@ class RpiCameraControlTopicHandler:
             if s3_path is None:
                 self.logger.error(f"Failed to upload {filename} to S3")
                 return False
-            
-    def handle_start_live_stream_event(self):
-        self.rpi_camera.start_live_stream()
-        self.logger.info("Camera live stream started.")
 
-    def handle_stop_live_stream_event(self):
-        self.rpi_camera.stop_live_stream()
-        self.logger.info("Camera live stream stopped.")
+    async def handle_start_webrtc_stream_event(self, webrtc_offer: WebRTCOffer):
+        answer_sdp = await self.rpi_camera.start_webrtc_stream(webrtc_offer)
+        if not answer_sdp:
+            self.logger.error("Failed to start WebRTC stream.")
+            return
+        
+        event = CameraControlEvent(
+            action=CameraAction.START_WEBRTC_STREAM_ANSWER,
+            webrtc_answer=answer_sdp
+        )
+        self.logger.info(f"Publishing WebRTC stream answer to: {MQTTTopics.CAMERA_WEBCAM_STREAM.value}")
+        self.mqtt_client.publish(MQTTTopics.CAMERA_WEBCAM_STREAM.value, event.json())
+        self.logger.info("Camera WebRTC stream started.")
+
+    async def handle_stop_webrtc_stream_event(self):
+        await self.rpi_camera.stop_webrtc_stream()
+        self.logger.info("Camera WebRTC stream stopped.")

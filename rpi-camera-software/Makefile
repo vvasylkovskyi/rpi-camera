@@ -141,3 +141,8 @@ run-mqtt:
 run-terminal:
 	@echo "Starting interactive terminal controller"
 	@PYTHONPATH=src $(POETRY) run python -m rpi_camera.terminal_main
+
+.PHONY: run-video
+test-video:
+	@echo "Starting video test"
+	@PYTHONPATH=src $(POETRY) run python -m rpi_camera.video_test

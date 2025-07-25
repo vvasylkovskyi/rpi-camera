@@ -12,14 +12,14 @@ logger = Logger("main")
 
 async def main():
     logger.info("Starting RPI Camera...")
+    loop = asyncio.get_running_loop()
     mqtt_client = AwsMQTTClient(MQTTClients.CAMERA.value)
-    topic_manager = MqttTopicManager(mqtt_client)
+    topic_manager = MqttTopicManager(mqtt_client, loop)
     rpi_camera_control_topic_handler = RpiCameraControlTopicHandler()
     try:
         logger.info("Starting MQTT client connection...")
         await mqtt_client.connect()
         logger.success("MQTT client connected successfully.")
-
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.value, rpi_camera_control_topic_handler.handle_incoming_message)
 
         # Optionally, subscribe here or start message handling if implemented

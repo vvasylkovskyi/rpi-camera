@@ -1,11 +1,13 @@
 from picamera2 import Picamera2
 from picamera2.encoders import JpegEncoder, H264Encoder
 from rpi_camera.video_operations.streaming_output import StreamingOutput
+from rpi_camera.models.camera_control_event import WebRTCOffer
 import time
 import os
 import datetime
 from rpi_camera.logger.logger import Logger 
-from picamera2.outputs import FfmpegOutput
+from picamera2.outputs import FfmpegOutput, PyavOutput
+from rpi_camera.webrtc.webrtc_streamer import WebRTCStreamer, PicameraVideoTrack
 
 class RpiCamera:
     _instance = None
@@ -21,7 +23,7 @@ class RpiCamera:
         self.logger.info("Initializing camera...")
         self.camera = Picamera2()
         configuration = self.camera.create_video_configuration(
-            main={"size": (640, 480)}
+            main={"size": (640, 480), "format": "RGB888"} # Force 3 channels for RGB
         )
         self.camera.configure(configuration)
         self.encoder = None
@@ -78,41 +80,67 @@ class RpiCamera:
             self.logger.warning("No recording in progress.")
             return None
 
-    def start_live_stream(self):
+    ## OLD, Uses HLS but has to high latency which is not practical for Camera
+    # # output = PyavOutput("udp://44.217.93.156:4001", format="mpegts")
+    # output = PyavOutput("udp://192.168.2.223:4001", format="mpegts")
+    # encoder = H264Encoder(bitrate=2_000_000)
+    # self.camera.start_recording(encoder, output)
+        
+    async def _start_webrtc_stream(self, webrtc_offer: WebRTCOffer):
         if self.is_recording:
-            self.logger.warning("Cannot start live stream while recording")
-            return False
+            self.logger.warning("Cannot start WebRTC stream while recording")
+            return None
+        self.logger.info("Starting Camera...")
+        encoder = H264Encoder(bitrate=2_000_000)
+        self.camera.start_recording(encoder, self.output)
+        self.logger.info("Camera started. ")
+        self.logger.info("Starting WebRTC stream...")
+        self.webrtc_streamer = WebRTCStreamer()
+        picamera_video_track = PicameraVideoTrack(self.camera)
+        answer_sdp = await self.webrtc_streamer.start(webrtc_offer.sdp, picamera_video_track)
+        self.logger.info(f"WebRTC stream started with answer SDP: {answer_sdp}")
+        return answer_sdp
+
+    async def _stop_webrtc_stream(self):
+        self.logger.info("Stopping WebRTC stream...")
+        if hasattr(self, 'webrtc_streamer'):
+            await self.webrtc_streamer.stop()
+            self.logger.info("WebRTC stream stopped.")
+    
+        self.logger.info("Stopping Camera...")
+        self.camera.stop_recording()
+        self.logger.info("Camera stopped.")            
+        
+        
+    ### OLD, Uses HLS but has to high latency which is not practical for Camera
+    # # output = PyavOutput("udp://44.217.93.156:4001", format="mpegts")
+    # output = PyavOutput("udp://192.168.2.223:4001", format="mpegts")
+    # encoder = H264Encoder(bitrate=2_000_000)
+    # self.camera.start_recording(encoder, output)
+            
+    async def start_webrtc_stream(self, webrtc_offer: WebRTCOffer):
+        # if self.is_recording:
+        #     self.logger.warning("Cannot start live stream while recording")
+        #     return False
 
         self.logger.info("Starting live stream...")
-        # self.camera.start_encoder(JpegEncoder(), self.output)
-        self.logger.info("Live stream started.")
-        return True
+        answer_sdp = await self._start_webrtc_stream(webrtc_offer)
+        self.logger.info(f"Live stream started with answer SDP: {answer_sdp}")
 
-    def stop_live_stream(self):
+        self.is_recording = True
+        return answer_sdp
+
+    async def stop_webrtc_stream(self):
         if not self.is_recording:
-            self.logger.warning("No live stream in progress.")
+            self.logger.warning("No WebRTC stream in progress.")
             return False
 
-        self.logger.info("Stopping live stream...")
-        # self.camera.stop_encoder()
-        self.logger.info("Live stream stopped.")
+        self.logger.info("Stopping WebRTC stream...")
+        await self._stop_webrtc_stream()
+        self.logger.info("Stopping Camera...")
+        self.camera.stop_recording()
+        self.logger.info("Camera stopped.")
+        self.is_recording = False
+        self.logger.info("WebRTC stream stopped.")
         return True
     
-    # def generate_live_jpeg_frames(self):
-    #     self.logger.info("Starting JPEG frame generator...")
-    #     while True:
-    #         with self.output.condition:
-    #             self.output.condition.wait()
-    #             frame = self.output.frame
-
-    #         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
-    #         time.sleep(1 / 30)  # 30 FPS
-
-    # def start_jpeg_camera(self):
-    #     if not self.camera:
-    #         self.logger.error("Camera is not started.")
-    #         raise RuntimeError("Camera is not started.")
-    #     encoder = JpegEncoder()
-    #     self.camera.start()
-    #     self.camera.start_encoder(encoder, self.output)
-    #     self.logger.info("JPEG camera started.")

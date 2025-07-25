@@ -39,12 +39,12 @@ class TerminalController:
                 event = CameraControlEvent(action=CameraAction.STOP)
                 self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
             elif choice == "3":
-                self.logger.info("User selected: Start Live Stream")
-                event = CameraControlEvent(action=CameraAction.START_LIVE_STREAM)
+                self.logger.info("User selected: Start WebRTC Stream")
+                event = CameraControlEvent(action=CameraAction.START_WEBRTC_STREAM)
                 self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
             elif choice == "4":
-                self.logger.info("User selected: Stop Live Stream")
-                event = CameraControlEvent(action=CameraAction.STOP_LIVE_STREAM)
+                self.logger.info("User selected: Stop WebRTC Stream")
+                event = CameraControlEvent(action=CameraAction.STOP_WEBRTC_STREAM)
                 self.mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
             else:
                 self.logger.info(f"Invalid option '{choice}'. Please enter 1, 2, 3, or 4.")

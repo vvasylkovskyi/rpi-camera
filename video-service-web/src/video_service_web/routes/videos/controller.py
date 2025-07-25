@@ -49,7 +49,7 @@ async def stop_streaming_service():
     mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
     ffmpeg_service = FFmpegStreamingService()
     ffmpeg_service.stop()
-    event = CameraControlEvent(action=CameraAction.STOP_LIVE_STREAM)
+    event = CameraControlEvent(action=CameraAction.START_WEBRTC_STREAM)
     mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
     ffmpeg_service.cleanup()
     return {
