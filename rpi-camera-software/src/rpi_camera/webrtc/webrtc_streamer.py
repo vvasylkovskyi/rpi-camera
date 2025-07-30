@@ -31,27 +31,6 @@ class PicameraVideoTrack(VideoStreamTrack):
 
 ICE_SERVERS = [
     RTCIceServer(urls="stun:stun.l.google.com:19302"),
-    # Optional: Add TURN server if needed
-    RTCIceServer(
-        urls="turn:standard.relay.metered.ca:80",
-        username="267a8ddc0b92539bebd0229e",
-        credential="Inh/lf0T5gQR7i77"
-    ),
-    RTCIceServer(
-        urls="turn:standard.relay.metered.ca:80?transport=tcp",
-        username="267a8ddc0b92539bebd0229e",
-        credential="Inh/lf0T5gQR7i77"
-    ),
-    RTCIceServer(
-        urls="turn:standard.relay.metered.ca:443",
-        username="267a8ddc0b92539bebd0229e",
-        credential="Inh/lf0T5gQR7i77"
-    ),
-    RTCIceServer(
-        urls="turns:standard.relay.metered.ca:443?transport=tcp",
-        username="267a8ddc0b92539bebd0229e",
-        credential="Inh/lf0T5gQR7i77"
-    )
 ]
 
 class WebRTCStreamer:
