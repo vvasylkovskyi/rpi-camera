@@ -5,8 +5,10 @@ from rpi_camera.clients.aws_mqtt_client import AwsMQTTClient
 from rpi_camera.logger.logger import Logger
 from rpi_camera.mqtt_topics_manager.mqtt_topics_manager import MqttTopicManager
 from rpi_camera.mqtt.rpi_camera_control_topic_handler import RpiCameraControlTopicHandler
+from rpi_camera.mqtt.battery_info_topic_handler import BatteryInfoTopicHandler
 from rpi_camera.mqtt.topics import MQTTTopics
 from rpi_camera.mqtt.mqtt_clients import MQTTClients
+from rpi_camera.battery_manager.battery_manager import BatteryManager
 
 logger = Logger("main")
 
@@ -16,11 +18,17 @@ async def main():
     mqtt_client = AwsMQTTClient(MQTTClients.CAMERA.value)
     topic_manager = MqttTopicManager(mqtt_client, loop)
     rpi_camera_control_topic_handler = RpiCameraControlTopicHandler()
+    battery_info_topic_handler = BatteryInfoTopicHandler()
+    battery_manager = BatteryManager()
+    battery_manager.get_battery_info()
     try:
         logger.info("Starting MQTT client connection...")
         await mqtt_client.connect()
         logger.success("MQTT client connected successfully.")
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.value, rpi_camera_control_topic_handler.handle_incoming_message)
+        logger.info("Subscribed to camera control topic.")
+        await topic_manager.subscribe_handler_to_topic(MQTTTopics.BATTERY_INFO.value, battery_info_topic_handler.handle_incoming_message)
+        logger.info("Subscribed to battery info topic.")
 
         # Optionally, subscribe here or start message handling if implemented
         # await mqtt_client.subscribe("rpi-camera/control", on_video_event_received)

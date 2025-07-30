@@ -26,7 +26,6 @@ class RpiCameraControlTopicHandler:
 
         command = payload.action.value
         
-        
         if command == CameraAction.START.value:
             self.handle_start_video_event()
         elif command == CameraAction.STOP.value:

@@ -27,6 +27,7 @@ ruff    = "^0.5.5"
 
 [tool.poetry.extras]
 camera = ["picamera2"]
+pijuice = ["pijuice"]
 
 [tool.ruff]
 fix            = true

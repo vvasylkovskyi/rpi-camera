@@ -1198,8 +1198,9 @@ standard = ["colorama (>=0.4)", "httptools (>=0.6.3)", "python-dotenv (>=0.13)",
 
 [extras]
 camera = []
+pijuice = []
 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.14"
-content-hash = "5c4a2a04e547c1022e85d8f89d6f5923c9069e6836f14916932328083a32da2e"
+content-hash = "4b72d746b35172ef185ba3315ca66610bd8520763905d51f03322db1cac0dd98"
