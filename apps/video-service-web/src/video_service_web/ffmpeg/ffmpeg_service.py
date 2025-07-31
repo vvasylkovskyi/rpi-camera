@@ -4,7 +4,7 @@ import signal
 import asyncio
 import glob
 from subprocess import Popen
-from video_service_web.logger.logger import Logger
+from shared.logger.logger import Logger
 
 logger = Logger("FFmpegStreamingService")
 

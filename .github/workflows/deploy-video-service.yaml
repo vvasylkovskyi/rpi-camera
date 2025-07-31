@@ -28,7 +28,7 @@ jobs:
         run: |
           TAG=${{ github.sha }}
           echo "Using tag: $TAG"
-          docker build -f ./video-service-web/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/vvasylkovskyi-video-service-web:$TAG ./video-service-web
+          docker build -f ./video-service-web/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/vvasylkovskyi-video-service-web:$TAG .
           docker push ${{ secrets.DOCKER_USERNAME }}/vvasylkovskyi-video-service-web:$TAG
 
       - name: Set output tag

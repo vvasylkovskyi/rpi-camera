@@ -3,7 +3,7 @@ import asyncio
 import traceback
 from awscrt import io, mqtt
 from awsiot import mqtt_connection_builder
-from video_service_web.logger.logger import Logger
+from shared.logger.logger import Logger
 from video_service_web.utils.base64 import Base64
 
 

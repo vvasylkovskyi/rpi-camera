@@ -24,14 +24,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV PATH="/root/.local/bin:$PATH"
 
 # Copy project files
-COPY pyproject.toml poetry.lock ./
+COPY video-service-web/pyproject.toml video-service-web/poetry.lock ./
+COPY shared ./shared
 
 # Install dependencies
 RUN poetry config virtualenvs.create false && \
     poetry install --no-root --only main
 
 # Copy the rest of the application
-COPY ./src ./
+COPY video-service-web/src ./src
 
 # Create HLS directory for video segments and manifest
 RUN mkdir -p /app/hls

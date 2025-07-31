@@ -1,7 +1,7 @@
 import os
 import base64
 from pathlib import Path
-from video_service_web.logger.logger import Logger
+from shared.logger.logger import Logger
 
 
 class Base64:

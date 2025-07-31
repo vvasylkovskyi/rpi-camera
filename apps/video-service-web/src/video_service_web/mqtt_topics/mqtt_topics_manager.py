@@ -1,6 +1,6 @@
 import os
 import traceback
-from video_service_web.logger.logger import Logger
+from shared.logger.logger import Logger
 
 
 class MqttTopicManager:
