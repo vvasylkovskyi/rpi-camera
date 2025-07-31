@@ -1,0 +1,78 @@
+[tool.poetry]
+authors     = ["Viktor Vasylkovskyi <viktor.vasylkovskyi@gmail.com>"]
+description = "Raspberry Pi Camera Integration API"
+homepage    = "https://github.com/vvasylkovskyi/rpi-camera"
+maintainers = ["Viktor Vasylkovskyi <viktor.vasylkovskyi@gmail.com>"]
+name        = "rpi-camera"
+packages    = [{ include = "rpi_camera", from = "src" }]
+readme      = "README.md"
+repository  = "https://github.com/vvasylkovskyi/rpi-camera"
+version     = "0.0.0"
+
+[tool.poetry.dependencies]
+fastapi       = ">=0.109.0"
+numpy         = "1.24.2"
+python        = "3.11.2"
+python-dotenv = "^1.0.1"
+uvicorn       = ">=0.26.0"
+jsonschema    = "4.25.0"
+aiortc        = "1.13.0"
+psutil        = "7.0.0"
+pydantic      = "2.11.7"
+shared = { path = "../shared", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+pyright = "^1.1.374"
+ruff    = "^0.5.5"
+
+[tool.poetry.extras]
+camera = ["picamera2"]
+pijuice = ["pijuice"]
+
+[tool.ruff]
+fix            = true
+line-length    = 120
+src            = ["src", "tests"]
+target-version = "py311"
+
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
+]
+
+
+[tool.ruff.format]
+indent-style              = "space"
+line-ending               = "lf"
+quote-style               = "double"
+skip-magic-trailing-comma = true
+
+[tool.pyright]
+exclude  = ["**/__pycache__"]
+ignore   = []
+include  = ["src"]
+strict   = []
+venvPath = ".venv"
+
+reportMissingImports           = true
+reportMissingTypeStubs         = false
+reportUnknownParameterType     = true
+reportUntypedFunctionDecorator = true
