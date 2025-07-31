@@ -30,6 +30,7 @@ default:
 ################################################################################
 .PHONY: install
 install:
+	$(MAKE) link_shared
 	$(MAKE) install-poetry
 	$(MAKE) new-venv
 	$(MAKE) install-deps
@@ -129,9 +130,14 @@ typecheck:
 # Development - Start Server
 ################################################################################
 
+.PHONY: link_shared
+link_shared:
+	@echo "Linking shared directory"
+	rm -rf shared
+	ln -s ../shared shared
+
 .PHONY: run
 run:
 	@echo "Starting the development server"
-	rm -rf shared
-	ln -s ../shared shared
-	@PYTHONPATH=src $(POETRY) run uvicorn video_service_web.main:app --host 0.0.0.0 --port 4000 --reload
+	$(MAKE) link_shared
+	@PYTHONPATH=src $(POETRY) run uvicorn main:app --host 0.0.0.0 --port 4000 --reload

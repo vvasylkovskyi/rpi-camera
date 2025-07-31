@@ -3,8 +3,8 @@ import asyncio
 import json
 
 from shared.logger.logger import Logger
-from video_service_web.clients.aws_mqtt_client import AwsMQTTClient
-from video_service_web.models.camera_control_event import (
+from shared.clients.aws_mqtt_client import AwsMQTTClient
+from shared.models.camera_control_event import (
     CameraControlEvent,
     CameraAction,
     WebRTCOffer,

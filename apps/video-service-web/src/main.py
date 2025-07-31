@@ -1,11 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from video_service_web.routes.routes import create_router
+from routes.routes import create_router
 from shared.logger.logger import Logger
-from video_service_web.clients.aws_mqtt_client import AwsMQTTClient
-from fastapi.staticfiles import StaticFiles
-from video_service_web.ffmpeg.ffmpeg_service import FFmpegStreamingService
-from video_service_web.mqtt.mqtt_clients import MQTTClients
+from shared.clients.aws_mqtt_client import AwsMQTTClient
+from ffmpeg.ffmpeg_service import FFmpegStreamingService
+from shared.mqtt.mqtt_clients import MQTTClients
 
 
 logger = Logger("main")

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from video_service_web.routes.health_check.controller import health_check_router
-from video_service_web.routes.videos.controller import videos_router
+from routes.health_check.controller import health_check_router
+from routes.videos.controller import videos_router
 
 
 def create_router():
