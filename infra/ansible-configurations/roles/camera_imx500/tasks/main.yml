@@ -1,11 +1,13 @@
-- name: Upgrade all packages
-  shell: apt update && apt full-upgrade -y
+- name: Update and upgrade packages
+  apt:
+    upgrade: dist
+    update_cache: yes
 
-# - name: Install IMX500 firmware
-#   apt:
-#     name: imx500-all
-#     state: present
-#     update_cache: yes
+- name: Install IMX500 firmware
+  apt:
+    name: imx500-all
+    state: present
+    update_cache: yes
 
 - name: Install Picamera2
   apt:
