@@ -1,5 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel
+from shared.models.battery_metrics import BatteryMetrics
 
 class BatteryAction(Enum):
     READ_STATUS = "read_status"
@@ -7,10 +8,6 @@ class BatteryAction(Enum):
 class BatteryInfoRequestEvent(BaseModel):
     action: BatteryAction
 
-class BatteryInfoResponseEvent(BaseModel):
-    charge_level: int
-    temperature: int
-    voltage: int
-    current: int
-    is_charging: bool
+class BatteryInfoResponseEvent(BatteryMetrics):
+    battery_info: BatteryMetrics
 

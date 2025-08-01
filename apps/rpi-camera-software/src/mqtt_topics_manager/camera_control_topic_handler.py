@@ -21,7 +21,8 @@ class CameraControlTopicHandler(BaseTopicHandler):
         # So just return None or override publish logic.
         return None
 
-    async def handle_command(self, command: str, payload):
+    async def handle_command(self, payload: CameraControlEvent):
+        command = payload.action
         if command == CameraAction.START.value:
             self.handle_start_video_event()
         elif command == CameraAction.STOP.value:

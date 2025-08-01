@@ -1,4 +1,5 @@
 from shared.models.battery_info_event import BatteryAction, BatteryInfoRequestEvent, BatteryInfoResponseEvent
+from shared.models.battery_metrics import BatteryMetrics
 from shared.mqtt.mqtt_clients import MQTTClients
 from shared.mqtt.mqtt_topics import MQTTTopics
 
@@ -16,7 +17,8 @@ class BatteryInfoTopicHandler(BaseTopicHandler):
     def get_topic(self):
         return MQTTTopics.BATTERY_INFO.value
 
-    async def handle_command(self, command: str, payload):
+    async def handle_command(self, payload: BatteryInfoRequestEvent):
+        command = payload.action
         if command == BatteryAction.READ_STATUS.value:
             self.handle_read_battery_status_event(payload)
         else:
@@ -26,16 +28,12 @@ class BatteryInfoTopicHandler(BaseTopicHandler):
         self.logger.info("Reading battery status...")
         
         battery_manager = BatteryManager()
-        battery_info = battery_manager.get_battery_info()
+        battery_metrics: BatteryMetrics = battery_manager.get_battery_info()
         
         self.logger.info("Battery status read successfully.")
         
         battery_info_event = BatteryInfoResponseEvent(
-            charge_level=battery_info.charge_level,
-            temperature=battery_info.temperature,
-            voltage=battery_info.voltage,
-            current=battery_info.current,
-            is_charging=battery_info.is_charging
+            battery_info=battery_metrics
         )
         
         self.logger.info(f"Publishing battery info to: {self.get_topic()}")

@@ -1,4 +1,3 @@
-import json
 
 from shared.models.device_control_event import (
     DeviceControlAction,
@@ -23,14 +22,19 @@ class DeviceControlTopicHandler(BaseTopicHandler):
     def get_topic(self):
         return MQTTTopics.DEVICE_CONTROL.value
 
-    async def handle_command(self, payload: str):
-        # print(">>> payload: ", payload)
-        # data: DeviceControlRequestEvent = DeviceControlRequestEvent.model_validate(payload)
-        data = json.loads(payload)
-        if data["action"] == DeviceControlAction.GET_HEALTH_CHECK.value:
+    async def handle_command(self, data: DeviceControlRequestEvent):
+        if data.action == DeviceControlAction.GET_HEALTH_CHECK:
             self.handle_get_health_check_event(data)
+        elif data.action == DeviceControlAction.SHUTDOWN:
+            self.logger.info("Device shutdown command received.")
+            self.handle_shutdown_event(data)
+            self.logger.info("Device is shutting down...")
+        elif data.action == DeviceControlAction.RESTART:
+            self.logger.info("Device restart command received.")
+            self.handle_restart_event(data)
+            self.logger.info("Device is restarting...")
         else:
-            self.logger.error(f"Unknown command: {data['action']}")
+            self.logger.error(f"Unknown command: {data.action}")
 
     def handle_get_health_check_event(self, payload: DeviceControlRequestEvent):
         self.logger.info("Getting device health check...")
@@ -46,3 +50,15 @@ class DeviceControlTopicHandler(BaseTopicHandler):
         self.logger.info(f"Publishing device health info to: {self.get_topic()}")
         self.mqtt_client.publish(f"{self.get_topic()}/response", device_control_event.json())
         self.logger.info("Device health info published successfully.")
+
+    def handle_shutdown_event(self, payload: DeviceControlRequestEvent):
+        # Implement the logic to shutdown the device
+        self.logger.info("Shutting down the device...")
+        device = Device()
+        device.shutdown_device()
+
+    def handle_restart_event(self, payload: DeviceControlRequestEvent):
+        # Implement the logic to restart the device
+        self.logger.info("Restarting the device...")
+        device = Device()
+        device.reboot_device()

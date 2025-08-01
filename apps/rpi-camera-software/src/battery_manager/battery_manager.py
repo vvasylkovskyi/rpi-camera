@@ -2,6 +2,7 @@
 from shared.logger.logger import Logger
 
 from pijuice_battery.pijuice_battery import PiJuiceBattery
+from shared.models.battery_metrics import BatteryMetrics
 
 
 class BatteryManager:
@@ -22,13 +23,13 @@ class BatteryManager:
         battery_status = self.battery.get_status()
         is_charging = battery_status["battery"] == "CHARGING_FROM_5V_IO" or battery_status["battery"] == "CHARGING_FROM_IN"
 
-        battery_info = {
-            "charge_level": self.battery.get_charge_level(),
-            "temperature": self.battery.get_temperature(),
-            "voltage": self.battery.get_voltage(),
-            "current": self.battery.get_current(),
-            "is_charging": is_charging,
-        }
+        battery_info = BatteryMetrics(
+            charge_level=self.battery.get_charge_level(),
+            temperature=self.battery.get_temperature(),
+            voltage=self.battery.get_voltage(),
+            current=self.battery.get_current(),
+            is_charging=is_charging,
+        )
 
         self.logger.info(f"Battery Info: {battery_info}")
 

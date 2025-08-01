@@ -22,20 +22,15 @@ class BaseTopicHandler(ABC):
         pass
 
     @abstractmethod
-    async def handle_command(self, payload: dict):
+    async def handle_command(self, payload):
         """Handle the command with the parsed payload"""
         pass
 
     async def handle_incoming_message(self, topic: str, message: str):
-        # try:
-        #     request_model = self.get_request_model()
-        #     print(">>> message: ", message, "request_model: ", request_model)
-        #     data = json.loads(message)
-        #     payload = request_model.model_validate(data)
-        #     print(">> payload: ", payload)
-        # except ValidationError as e:
-        #     self.logger.error(f"Invalid {request_model.__name__} received '{message}': {e}")
-        #     return
-        
-        data = json.loads(message)
-        await self.handle_command(data)
+        try:
+            request_model = self.get_request_model()
+            payload = request_model.validate(json.loads(message)) # Not sure why double json.loads is needed, but it seems to be the case in the original code
+            await self.handle_command(payload)
+        except ValidationError as e:
+            self.logger.error(f"Invalid {request_model.__name__} received '{message}': {e}")
+            return
