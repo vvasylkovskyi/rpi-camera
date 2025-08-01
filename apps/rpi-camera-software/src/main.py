@@ -5,7 +5,7 @@ from shared.clients.aws_mqtt_client import AwsMQTTClient
 from mqtt_topics_manager.mqtt_topics_manager import MqttTopicManager
 from mqtt_topics_manager.camera_control_topic_handler import CameraControlTopicHandler
 from mqtt_topics_manager.battery_info_topic_handler import BatteryInfoTopicHandler
-from mqtt_topics_manager.device_health_check_topic_handler import DeviceHealthCheckTopicHandler
+from mqtt_topics_manager.device_control_topic_handler import DeviceControlTopicHandler
 from shared.mqtt.mqtt_topics import MQTTTopics
 from shared.mqtt.mqtt_clients import MQTTClients
 from battery_manager.battery_manager import BatteryManager
@@ -27,7 +27,7 @@ async def main():
     loop = asyncio.get_running_loop()
     topic_manager = MqttTopicManager(mqtt_client, loop)
     
-    device_health_check_topic_handler = DeviceHealthCheckTopicHandler()
+    device_health_check_topic_handler = DeviceControlTopicHandler()
     battery_info_topic_handler = BatteryInfoTopicHandler()
     rpi_camera_control_topic_handler = CameraControlTopicHandler()
 
@@ -35,8 +35,8 @@ async def main():
         logger.info("Starting MQTT client connection...")
         await mqtt_client.connect()
         logger.success("MQTT client connected successfully.")
-        await topic_manager.subscribe_handler_to_topic(MQTTTopics.DEVICE_HEALTH_CHECK.value, device_health_check_topic_handler.handle_incoming_message)
-        logger.info("Subscribed to device health check topic.")
+        await topic_manager.subscribe_handler_to_topic(MQTTTopics.DEVICE_CONTROL.value, device_health_check_topic_handler.handle_incoming_message)
+        logger.info("Subscribed to device control topic.")
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.BATTERY_INFO.value, battery_info_topic_handler.handle_incoming_message)
         logger.info("Subscribed to battery info topic.")
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.value, rpi_camera_control_topic_handler.handle_incoming_message)

@@ -5,4 +5,4 @@ class MQTTTopics(Enum):
     CAMERA_WEBCAM_STREAM = "raspberrypi/webrtc_stream"
     CAMERA_FEED = "raspberrypi/feed"
     BATTERY_INFO = "raspberrypi/battery_info"
-    DEVICE_HEALTH_CHECK = "raspberrypi/device_health_check"
+    DEVICE_CONTROL = "raspberrypi/device_control"
