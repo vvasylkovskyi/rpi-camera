@@ -5,5 +5,4 @@ class BatteryMetrics(BaseModel):
     temperature: str
     voltage: str
     current: str
-    is_charging: bool
-
+    charging_status: str

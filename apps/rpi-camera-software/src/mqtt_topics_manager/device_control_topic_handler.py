@@ -47,7 +47,7 @@ class DeviceControlTopicHandler(BaseTopicHandler):
             health_check_info=device_health_info,
         )
 
-        self.logger.info(f"Publishing device health info to: {self.get_topic()}")
+        self.logger.info(f"Publishing device health info to: {self.get_topic()}/response")
         self.mqtt_client.publish(f"{self.get_topic()}/response", device_control_event.json())
         self.logger.info("Device health info published successfully.")
 

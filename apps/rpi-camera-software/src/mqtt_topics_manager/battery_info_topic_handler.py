@@ -36,6 +36,6 @@ class BatteryInfoTopicHandler(BaseTopicHandler):
             battery_info=battery_metrics
         )
         
-        self.logger.info(f"Publishing battery info to: {self.get_topic()}")
-        self.mqtt_client.publish(self.get_topic(), battery_info_event.json())
+        self.logger.info(f"Publishing battery info to: {self.get_topic()}/response")
+        self.mqtt_client.publish(f"{self.get_topic()}/response", battery_info_event.json())
         self.logger.info("Battery info published successfully.")

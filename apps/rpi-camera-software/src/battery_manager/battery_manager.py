@@ -21,14 +21,13 @@ class BatteryManager:
         
     def get_battery_info(self):
         battery_status = self.battery.get_status()
-        is_charging = battery_status["battery"] == "CHARGING_FROM_5V_IO" or battery_status["battery"] == "CHARGING_FROM_IN"
 
         battery_info = BatteryMetrics(
             charge_level=f"{self.battery.get_charge_level()}%",
             temperature=f"{self.battery.get_temperature()}°C",
             voltage=f"{self.battery.get_voltage()}mV",
             current=f"{self.battery.get_current()}mA",
-            is_charging=is_charging,
+            charging_status=battery_status["battery"],
         )
 
         self.logger.info(f"Battery Info: {battery_info}")

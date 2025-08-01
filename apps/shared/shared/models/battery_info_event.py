@@ -8,6 +8,6 @@ class BatteryAction(Enum):
 class BatteryInfoRequestEvent(BaseModel):
     action: BatteryAction
 
-class BatteryInfoResponseEvent(BatteryMetrics):
+class BatteryInfoResponseEvent(BaseModel):
     battery_info: BatteryMetrics
 
