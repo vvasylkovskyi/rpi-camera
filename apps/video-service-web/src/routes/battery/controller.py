@@ -16,7 +16,7 @@ async def health_check(_: Request):
         action=BatteryAction.GET_HEALTH_CHECK.value,
     )
 
-    result: dict = await mqtt_rpc_client.call(MQTTTopics.BATTERY_INFO.value, event.json())
+    result: dict = await mqtt_rpc_client.call(MQTTTopics.BATTERY_CONTROL.value, event.json())
     result = BatteryInfoResponseEvent.validate(result)
     return {
         "data": result

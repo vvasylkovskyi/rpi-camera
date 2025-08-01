@@ -37,7 +37,7 @@ async def main():
         logger.success("MQTT client connected successfully.")
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.DEVICE_CONTROL.value, device_health_check_topic_handler.handle_incoming_message)
         logger.info("Subscribed to device control topic.")
-        await topic_manager.subscribe_handler_to_topic(MQTTTopics.BATTERY_INFO.value, battery_info_topic_handler.handle_incoming_message)
+        await topic_manager.subscribe_handler_to_topic(MQTTTopics.BATTERY_CONTROL.value, battery_info_topic_handler.handle_incoming_message)
         logger.info("Subscribed to battery info topic.")
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.value, rpi_camera_control_topic_handler.handle_incoming_message)
         logger.info("Subscribed to camera control topic.")

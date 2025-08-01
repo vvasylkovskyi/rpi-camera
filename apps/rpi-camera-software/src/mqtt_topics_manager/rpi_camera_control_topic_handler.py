@@ -21,15 +21,17 @@ class CameraControlTopicHandler(BaseTopicHandler):
         # So just return None or override publish logic.
         return None
 
-    async def handle_command(self, command: str, payload):
-        if command == CameraAction.START.value:
+    async def handle_command(self, payload: CameraControlEvent):
+        command = payload.action
+        
+        if command == CameraAction.START:
             self.handle_start_video_event()
-        elif command == CameraAction.STOP.value:
+        elif command == CameraAction.STOP:
             self.handle_stop_video_event()
-        elif command == CameraAction.START_WEBRTC_STREAM.value:
+        elif command == CameraAction.START_WEBRTC_STREAM:
             webrtc_offer = payload.webrtc_offer
             await self.handle_start_webrtc_stream_event(webrtc_offer)
-        elif command == CameraAction.STOP_WEBRTC_STREAM.value:
+        elif command == CameraAction.STOP_WEBRTC_STREAM:
             await self.handle_stop_webrtc_stream_event()
         else:
             self.logger.error(f"Unknown command: {command}")
@@ -68,8 +70,8 @@ class CameraControlTopicHandler(BaseTopicHandler):
             action=CameraAction.START_WEBRTC_STREAM_ANSWER,
             webrtc_answer=answer_sdp
         )
-        self.logger.info(f"Publishing WebRTC stream answer to: {MQTTTopics.CAMERA_WEBCAM_STREAM.value}")
-        self.mqtt_client.publish(MQTTTopics.CAMERA_WEBCAM_STREAM.value, event.json())
+        self.logger.info(f"Publishing WebRTC stream answer to: {MQTTTopics.CAMERA_CONTROL.value}/response")
+        self.mqtt_client.publish(f"{MQTTTopics.CAMERA_CONTROL.value}/response", event.json())
         self.logger.info("Camera WebRTC stream started.")
 
     async def handle_stop_webrtc_stream_event(self):

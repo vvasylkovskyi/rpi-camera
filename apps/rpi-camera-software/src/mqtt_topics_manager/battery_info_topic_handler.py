@@ -15,7 +15,7 @@ class BatteryInfoTopicHandler(BaseTopicHandler):
         return BatteryInfoRequestEvent
 
     def get_topic(self):
-        return MQTTTopics.BATTERY_INFO.value
+        return MQTTTopics.BATTERY_CONTROL.value
 
     async def handle_command(self, payload: BatteryInfoRequestEvent):
         command = payload.action
