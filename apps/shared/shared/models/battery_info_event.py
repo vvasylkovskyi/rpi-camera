@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from shared.models.battery_metrics import BatteryMetrics
 
 class BatteryAction(Enum):
-    READ_STATUS = "read_status"
+    GET_HEALTH_CHECK = "get_health_check"
 
 class BatteryInfoRequestEvent(BaseModel):
     action: BatteryAction

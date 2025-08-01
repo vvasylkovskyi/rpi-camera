@@ -7,6 +7,7 @@ from shared.models.device_control_event import (
     DeviceControlRequestEvent,
     DeviceControlResponseEvent,
 )
+from shared.mqtt.mqtt_clients import MQTTClients
 from shared.mqtt.mqtt_topics import MQTTTopics
 
 from mqtt_rpc_client.mqtt_rpc_client import MqttRpcClient
@@ -15,28 +16,28 @@ device_router = APIRouter(prefix="/device")
 logger = Logger("device_router")
 
 @device_router.post("/shutdown")
-async def shutdown(_: Request):    
-    mqtt_client = AwsMQTTClient()
-
+def shutdown(_: Request):    
+    mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
+    
     event = DeviceControlRequestEvent(
         action=DeviceControlAction.SHUTDOWN.value,
     )
 
-    await mqtt_client.publish(MQTTTopics.DEVICE_CONTROL.value, event.json())
+    mqtt_client.publish(MQTTTopics.DEVICE_CONTROL.value, event.json())
     
     return {
         "status": "OK",
     }
 
 @device_router.get("/restart")
-async def restart(_: Request):    
-    mqtt_client = AwsMQTTClient()
+def restart(_: Request):    
+    mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
 
     event = DeviceControlRequestEvent(
         action=DeviceControlAction.RESTART.value,
     )
 
-    await mqtt_client.publish(MQTTTopics.DEVICE_CONTROL.value, event.json())
+    mqtt_client.publish(MQTTTopics.DEVICE_CONTROL.value, event.json())
     return {
         "status": "OK",
     }
@@ -49,7 +50,7 @@ async def get_health_check(_: Request):
         action=DeviceControlAction.GET_HEALTH_CHECK.value,
     )
 
-    result: dict = await mqtt_rpc_client.call(MQTTTopics.DEVICE_CONTROL.value, MQTTTopics.DEVICE_CONTROL_RESPONSE.value, event.json())
+    result: dict = await mqtt_rpc_client.call(MQTTTopics.DEVICE_CONTROL.value, event.json())
     result = DeviceControlResponseEvent.validate(result)
     return {
         "status": "OK",
