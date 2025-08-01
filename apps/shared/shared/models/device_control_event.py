@@ -5,6 +5,8 @@ from shared.models.device_metrics import DeviceMetrics
 
 class DeviceControlAction(Enum):
     GET_HEALTH_CHECK = "get_health_check"
+    SHUTDOWN = "shutdown"
+    RESTART = "restart"
 
 class DeviceControlRequestEvent(BaseModel):
     action: DeviceControlAction

@@ -1,5 +1,5 @@
 import json
-import uuid
+# import uuid
 import asyncio
 from shared.clients.aws_mqtt_client import AwsMQTTClient
 from shared.mqtt.mqtt_clients import MQTTClients
@@ -9,7 +9,7 @@ class MqttRpcClient:
         self.mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
 
     async def call(self, request_topic: str, reply_topic: str, payload: str, timeout: int = 10) -> dict:
-            request_id = str(uuid.uuid4())
+            # request_id = str(uuid.uuid4())
 
             # Add correlation info into the payload
             # payload = payload.copy()
