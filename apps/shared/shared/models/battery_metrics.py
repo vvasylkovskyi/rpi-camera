@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
 class BatteryMetrics(BaseModel):
-    charge_level: int
-    temperature: int
-    voltage: int
-    current: int
+    charge_level: str
+    temperature: str
+    voltage: str
+    current: str
     is_charging: bool
 

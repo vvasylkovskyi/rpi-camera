@@ -19,7 +19,7 @@ class BatteryInfoTopicHandler(BaseTopicHandler):
 
     async def handle_command(self, payload: BatteryInfoRequestEvent):
         command = payload.action
-        if command == BatteryAction.READ_STATUS.value:
+        if command == BatteryAction.GET_HEALTH_CHECK:
             self.handle_read_battery_status_event(payload)
         else:
             self.logger.error(f"Unknown command: {command}")

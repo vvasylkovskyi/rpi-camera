@@ -24,10 +24,10 @@ class BatteryManager:
         is_charging = battery_status["battery"] == "CHARGING_FROM_5V_IO" or battery_status["battery"] == "CHARGING_FROM_IN"
 
         battery_info = BatteryMetrics(
-            charge_level=self.battery.get_charge_level(),
-            temperature=self.battery.get_temperature(),
-            voltage=self.battery.get_voltage(),
-            current=self.battery.get_current(),
+            charge_level=f"{self.battery.get_charge_level()}%",
+            temperature=f"{self.battery.get_temperature()}°C",
+            voltage=f"{self.battery.get_voltage()}mV",
+            current=f"{self.battery.get_current()}mA",
             is_charging=is_charging,
         )
 
