@@ -3,6 +3,7 @@ import time
 import psutil
 import subprocess
 from shared.logger.logger import Logger
+from shared.models.device_metrics import DeviceMetrics
 
 
 class Device:
@@ -23,13 +24,13 @@ class Device:
         cpu_percent = psutil.cpu_percent(interval=1)
         mem = psutil.virtual_memory()
         disk = psutil.disk_usage('/')
-        metrics = {
-            'device_id': self.device_id,
-            'cpu_percent': cpu_percent,
-            'memory_percent': mem.percent,
-            'disk_percent': disk.percent,
-            'uptime_seconds': time.time() - psutil.boot_time(),
-        }
+        metrics = DeviceMetrics(
+            cpu_percent=cpu_percent,
+            memory_percent=mem.percent,
+            disk_percent=disk.percent,
+            uptime_seconds=time.time() - psutil.boot_time(),
+            device_id=self.device_id
+        )
         # Log the collected metrics
         self.logger.info(f"Collected health metrics: {metrics}")
         return metrics

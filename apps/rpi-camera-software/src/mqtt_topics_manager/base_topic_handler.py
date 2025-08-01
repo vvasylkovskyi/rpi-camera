@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
+import json
 
-from jsonschema import ValidationError
+from pydantic import ValidationError
 from shared.clients.aws_mqtt_client import AwsMQTTClient
 from shared.logger.logger import Logger
 
@@ -21,17 +22,20 @@ class BaseTopicHandler(ABC):
         pass
 
     @abstractmethod
-    async def handle_command(self, command: str, payload):
+    async def handle_command(self, payload: dict):
         """Handle the command with the parsed payload"""
         pass
 
     async def handle_incoming_message(self, topic: str, message: str):
-        try:
-            request_model = self.get_request_model()
-            payload = request_model.parse_raw(message)
-        except ValidationError as e:
-            self.logger.error(f"Invalid {request_model.__name__} received '{message}': {e}")
-            return
+        # try:
+        #     request_model = self.get_request_model()
+        #     print(">>> message: ", message, "request_model: ", request_model)
+        #     data = json.loads(message)
+        #     payload = request_model.model_validate(data)
+        #     print(">> payload: ", payload)
+        # except ValidationError as e:
+        #     self.logger.error(f"Invalid {request_model.__name__} received '{message}': {e}")
+        #     return
         
-        command = payload.action.value
-        await self.handle_command(command, payload)
+        data = json.loads(message)
+        await self.handle_command(data)
