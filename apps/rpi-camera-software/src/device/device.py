@@ -1,10 +1,11 @@
 import time
 
 import psutil
+import subprocess
 from shared.logger.logger import Logger
 
 
-class DeviceHealthChecker:
+class Device:
     _instance = None
 
     def __new__(cls, device_id=None):
@@ -32,3 +33,11 @@ class DeviceHealthChecker:
         # Log the collected metrics
         self.logger.info(f"Collected health metrics: {metrics}")
         return metrics
+
+    def reboot_device(self):
+        self.logger.info("Rebooting device now...")
+        subprocess.call(["sudo", "reboot"])
+
+    def shutdown_device(self):
+        self.logger.info("Shutting down device now...")
+        subprocess.call(["sudo", "shutdown", "now"])

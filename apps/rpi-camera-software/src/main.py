@@ -9,15 +9,15 @@ from mqtt_topics_manager.device_health_check_topic_handler import DeviceHealthCh
 from shared.mqtt.mqtt_topics import MQTTTopics
 from shared.mqtt.mqtt_clients import MQTTClients
 from battery_manager.battery_manager import BatteryManager
-from device_health_checker.device_health_checker import DeviceHealthChecker
+from device.device import Device
 
 logger = Logger("main")
 
 async def main():
     logger.info("Starting Device...")
 
-    device_health_checker = DeviceHealthChecker()
-    device_health_checker.collect_metrics()
+    device = Device()
+    device.collect_metrics()
     battery_manager = BatteryManager()
     battery_manager.get_battery_info()
     
@@ -42,9 +42,6 @@ async def main():
         await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.value, rpi_camera_control_topic_handler.handle_incoming_message)
         logger.info("Subscribed to camera control topic.")
 
-    
-        # Optionally, subscribe here or start message handling if implemented
-        # await mqtt_client.subscribe("rpi-camera/control", on_video_event_received)
         logger.success("MQTT client subscribed to rpi-camera/control.")
 
         # Run until stopped, e.g. by Ctrl+C
