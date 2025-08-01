@@ -6,3 +6,4 @@ class MQTTTopics(Enum):
     CAMERA_FEED = "raspberrypi/feed"
     BATTERY_INFO = "raspberrypi/battery_info"
     DEVICE_CONTROL = "raspberrypi/device_control"
+    DEVICE_CONTROL_RESPONSE = "raspberrypi/device_control/response"
