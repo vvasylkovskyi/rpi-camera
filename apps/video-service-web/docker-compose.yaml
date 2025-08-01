@@ -7,7 +7,7 @@ services:
   #   # image: vvasylkovskyi1/vvasylkovskyi-video-service-web:latest
   #   # restart: '${DOCKER_RESTART_POLICY:-unless-stopped}'
     env_file:
-      - ../.env
+      - .env
     # ports:
     #   - '4000:4000'
     #   - '4001:4001/udp'

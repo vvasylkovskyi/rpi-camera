@@ -47,4 +47,4 @@ ENV UDP_URL="0.0.0.0"
 EXPOSE 4000
 
 # Command to run the application
-CMD ["sh", "-c", "uvicorn video_service_web.main:app --host 0.0.0.0 --port 4000 --reload"]
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 4000 --reload"]
