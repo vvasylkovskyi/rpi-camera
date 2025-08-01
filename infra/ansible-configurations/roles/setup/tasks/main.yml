@@ -1,11 +1,12 @@
-- name: Update package list
-  command: apt update
-
-- name: Upgrade all packages
-  command: apt upgrade -y
+- name: Update and upgrade packages
+  apt:
+    upgrade: dist
+    update_cache: yes
 
 - name: Install lsof
-  command: apt install lsof
+  apt:
+    name: lsof
+    state: present
 
 - name: Install Python 3 and pip
   apt:

@@ -2,15 +2,15 @@ from fastapi import APIRouter, Request
 import asyncio
 import json
 
-from video_service_web.logger.logger import Logger
-from video_service_web.clients.aws_mqtt_client import AwsMQTTClient
-from video_service_web.models.camera_control_event import (
+from shared.logger.logger import Logger
+from shared.clients.aws_mqtt_client import AwsMQTTClient
+from shared.models.camera_control_event import (
     CameraControlEvent,
     CameraAction,
     WebRTCOffer,
 )
-from video_service_web.mqtt.mqtt_topics import MQTTTopics
-from video_service_web.mqtt.mqtt_clients import MQTTClients
+from shared.mqtt.mqtt_topics import MQTTTopics
+from shared.mqtt.mqtt_clients import MQTTClients
 
 videos_router = APIRouter(prefix="/video")
 logger = Logger("videos_router")

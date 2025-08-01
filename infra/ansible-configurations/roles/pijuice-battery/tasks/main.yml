@@ -1,0 +1,5 @@
+- name: Install pijuice-base
+  apt:
+    name: pijuice-base
+    state: present
+    update_cache: yes

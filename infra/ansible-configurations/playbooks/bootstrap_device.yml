@@ -39,6 +39,5 @@
     # - datadog
     # - camera_imx500
     # - promote_to_github_runner
-    # - generate_ssh_key_for_reverse_proxy_access
     # - upload_aws_iot_secrets
-    - install_ros
+    - pijuice-battery

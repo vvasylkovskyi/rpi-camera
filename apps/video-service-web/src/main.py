@@ -1,11 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from video_service_web.routes.routes import create_router
-from video_service_web.logger.logger import Logger
-from video_service_web.clients.aws_mqtt_client import AwsMQTTClient
-from fastapi.staticfiles import StaticFiles
-from video_service_web.ffmpeg.ffmpeg_service import FFmpegStreamingService
-from video_service_web.mqtt.mqtt_clients import MQTTClients
+from routes.routes import create_router
+from shared.logger.logger import Logger
+from shared.clients.aws_mqtt_client import AwsMQTTClient
+from ffmpeg.ffmpeg_service import FFmpegStreamingService
+from shared.mqtt.mqtt_clients import MQTTClients
 
 
 logger = Logger("main")
@@ -26,12 +25,6 @@ app.include_router(create_router())
 mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
 ffmpeg_service = FFmpegStreamingService()
 
-
-app.mount(
-    "/api/v1/video/hls",
-    StaticFiles(directory=ffmpeg_service.HLS_DIR),
-    name="hls",
-)
 
 
 @app.on_event("startup")

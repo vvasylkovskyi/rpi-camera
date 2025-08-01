@@ -6,7 +6,7 @@ Having configured many Raspberry Pi devices in the past, I can confidently say t
 
 ## Step 1: Installing Raspberry Pi OS Lite
 
-* * Raspberry Pi OS Lite (64-bit): [Download here](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13/2025-05-13-raspios-bookworm-arm64-lite.img.xz). Make sure the OS version matches your hardware’s architecture (e.g., ARM64). Follow the steps below for [Flashing the OS Image](#flash-the-os-image).
+Raspberry Pi OS Lite (64-bit): [Download here](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13/2025-05-13-raspios-bookworm-arm64-lite.img.xz). Make sure the OS version matches your hardware’s architecture (e.g., ARM64). Follow the steps below for [Flashing the OS Image](#flash-the-os-image).
 
 ### Flash the OS Image
 

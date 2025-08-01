@@ -179,3 +179,5 @@ src/mocks
 aws_iot_ssl_credentials_raspberry_pi
 aws_iot_ssl_credentials_video_service_web
 certs/
+
+apps/video-service-web/shared

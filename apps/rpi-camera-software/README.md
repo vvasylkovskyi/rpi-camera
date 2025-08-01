@@ -15,10 +15,21 @@ This device goal is to be a wild-life/security camera. As such, an obvious requi
   - The device will also integrate a PiJuice Battery module, which has API to access the battery levels. 
     - API on this can be found here - https://github.com/PiSupply/PiJuice/tree/master/Software#pijuice-status 
 
+## Running App for Development
+
+From your camera device run: 
+
+```sh
+make # installs dependencies
+source /etc/rpi-camera.env # Get environment variables
+make run # Starts the project
+```
+
+## Deploying app
 
 ### Promote Raspberry Pi to become a Github Runner
 
-You can read this article [Setting Up a Raspberry Pi 4B as a GitHub Actions Self-Hosted Runner](https://www.vvasylkovskyi.com/posts/configuring-rpi-as-github-runner). This explains very well about the manual steps required to make a raspberry pi a runner. We can also automate this process with ansible. This is usually done via ansible if you followed the steps before in 
+You can read this article [Setting Up a Raspberry Pi 4B as a GitHub Actions Self-Hosted Runner](https://www.vvasylkovskyi.com/posts/configuring-rpi-as-github-runner). This explains very well about the manual steps required to make a raspberry pi a runner. We can also automate this process with ansible. This is usually done via ansible if you followed the steps before in [Infrastructure automation with Ansible](../ansible-configurations/README.md).
 
 #### Ansible code to promote raspberry pi to Github Runner 
 
