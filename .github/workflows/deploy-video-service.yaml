@@ -45,7 +45,7 @@ jobs:
 
       - name: Update docker_image_hash_video_service in terraform.tfvars
         run: |
-          cd vvasylkovskyi-infra/infra/terraform
+          cd vvasylkovskyi-infra/apps/portfolio
           FILE=terraform.tfvars
           TAG=${{ needs.video_service_web_build_and_push.outputs.tag }}
           echo "Replacing docker_image_hash_video_service with: $TAG"
