@@ -1,6 +1,5 @@
 from shared.models.battery_info_event import BatteryAction, BatteryInfoRequestEvent, BatteryInfoResponseEvent
 from shared.models.battery_metrics import BatteryMetrics
-from shared.mqtt.mqtt_clients import MQTTClients
 from shared.mqtt.mqtt_topics import MQTTTopics
 
 from battery.battery_manager import BatteryManager
@@ -8,14 +7,14 @@ from mqtt_topics_manager.base_topic_handler import BaseTopicHandler
 
 
 class BatteryInfoTopicHandler(BaseTopicHandler):
-    def __init__(self):
-        super().__init__("BatteryInfoTopicHandler", MQTTClients.CAMERA.value)
+    def __init__(self, device_id: str):
+        super().__init__("BatteryInfoTopicHandler", device_id)
 
     def get_request_model(self):
         return BatteryInfoRequestEvent
 
     def get_topic(self):
-        return MQTTTopics.BATTERY_CONTROL.value
+        return MQTTTopics.BATTERY_CONTROL.with_device(self.get_device_id())
 
     async def handle_command(self, payload: BatteryInfoRequestEvent):
         command = payload.action

@@ -4,10 +4,13 @@ import json
 from pydantic import ValidationError
 from shared.clients.aws_mqtt_client import AwsMQTTClient
 from shared.logger.logger import Logger
+from shared.mqtt.mqtt_clients import MQTTClients
 
 
 class BaseTopicHandler(ABC):
-    def __init__(self, logger_name: str, mqtt_client_name: str):
+    def __init__(self, logger_name: str, device_id: str):
+        self.device_id = device_id
+        mqtt_client_name = MQTTClients.DEVICE.with_device(device_id)
         self.logger = Logger(logger_name)
         self.mqtt_client = AwsMQTTClient(mqtt_client_name)
 
@@ -34,3 +37,6 @@ class BaseTopicHandler(ABC):
         except ValidationError as e:
             self.logger.error(f"Invalid {request_model.__name__} received '{message}': {e}")
             return
+
+    def get_device_id(self) -> str:
+        return self.device_id

@@ -131,9 +131,4 @@ typecheck:
 
 .PHONY: run
 run:
-	@PYTHONPATH=src $(POETRY) run python src/main.py
-
-.PHONY: run-terminal
-run-terminal:
-	@echo "Starting interactive terminal controller"
-	@PYTHONPATH=src $(POETRY) run python -m terminal_main
+	@PYTHONPATH=src $(POETRY) run watchfiles "python src/main.py" src

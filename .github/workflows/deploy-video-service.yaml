@@ -39,13 +39,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: video_service_web_build_and_push
     steps:
-      - name: Checkout portfolio repo
+      - name: Checkout infra repo
         run: |
-          git clone https://x-access-token:${{ secrets.PORTFOLIO_REPO_PAT }}@github.com/vvasylkovskyi/vvasylkovskyi-portfolio.git
+          git clone https://x-access-token:${{ secrets.INFRA_REPO_PAT }}@github.com/vvasylkovskyi/vvasylkovskyi-infra.git
 
       - name: Update docker_image_hash_video_service in terraform.tfvars
         run: |
-          cd vvasylkovskyi-portfolio/infra/terraform
+          cd vvasylkovskyi-infra/infra/terraform
           FILE=terraform.tfvars
           TAG=${{ needs.video_service_web_build_and_push.outputs.tag }}
           echo "Replacing docker_image_hash_video_service with: $TAG"
@@ -55,14 +55,14 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          cd vvasylkovskyi-portfolio
+          cd vvasylkovskyi-infra
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           if git diff --quiet; then
             echo "No changes to commit"
           else
-            git add infra/terraform/terraform.tfvars
+            git add apps/portfolio/terraform.tfvars
             git commit -m "Update docker_image_hash_video_service to ${{ needs.video_service_web_build_and_push.outputs.tag }}"
             git push origin main
           fi

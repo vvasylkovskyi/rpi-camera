@@ -45,12 +45,12 @@ def restart(_: Request):
 @device_router.get("/health-check")
 async def get_health_check(_: Request):    
     mqtt_rpc_client = MqttRpcClient()
-
+    device_id = "rpi-camera-device"
     event = DeviceControlRequestEvent(
         action=DeviceControlAction.GET_HEALTH_CHECK.value,
     )
 
-    result: dict = await mqtt_rpc_client.call(MQTTTopics.DEVICE_CONTROL.value, event.json())
+    result: dict = await mqtt_rpc_client.call(MQTTTopics.DEVICE_CONTROL.with_device(device_id), event.json())
     result = DeviceControlResponseEvent.validate(result)
     return {
         "status": "OK",

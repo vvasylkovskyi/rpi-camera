@@ -2,6 +2,8 @@ from enum import Enum
 
 
 class MQTTClients(Enum):
-    CAMERA = "rpi-camera"
-    TERMINAL = "rpi-terminal"
-    WEB_SERVICE = "video-service-web"
+    DEVICE = "device/{device_id}"
+    WEB_SERVICE = "video-service-web/{device_id}"
+
+    def with_device(self, device_id: str) -> str:
+        return self.value.format(device_id=device_id)

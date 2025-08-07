@@ -5,7 +5,6 @@ from shared.models.device_control_event import (
     DeviceControlResponseEvent,
 )
 from shared.models.device_metrics import DeviceMetrics
-from shared.mqtt.mqtt_clients import MQTTClients
 from shared.mqtt.mqtt_topics import MQTTTopics
 
 from device.device import Device
@@ -13,14 +12,14 @@ from mqtt_topics_manager.base_topic_handler import BaseTopicHandler
 
 
 class DeviceControlTopicHandler(BaseTopicHandler):
-    def __init__(self):
-        super().__init__("DeviceControlTopicHandler", MQTTClients.CAMERA.value)
+    def __init__(self, device_id: str):
+        super().__init__("DeviceControlTopicHandler", device_id)
 
     def get_request_model(self):
         return DeviceControlRequestEvent
 
     def get_topic(self):
-        return MQTTTopics.DEVICE_CONTROL.value
+        return MQTTTopics.DEVICE_CONTROL.with_device(self.get_device_id())
 
     async def handle_command(self, data: DeviceControlRequestEvent):
         if data.action == DeviceControlAction.GET_HEALTH_CHECK:

@@ -14,7 +14,8 @@ from device.device import Device
 logger = Logger("main")
 
 async def main():
-    logger.info("Starting Device...")
+    device_id = "rpi-camera-device"
+    logger.info(f"Starting Device. ID: {device_id}")
 
     device = Device()
     device.collect_metrics()
@@ -23,23 +24,19 @@ async def main():
     
     logger.info("Starting MQTT and Camera Module...")
     
-    mqtt_client = AwsMQTTClient(MQTTClients.CAMERA.value)
+    mqtt_client = AwsMQTTClient(MQTTClients.DEVICE.with_device(device_id))
     loop = asyncio.get_running_loop()
     topic_manager = MqttTopicManager(mqtt_client, loop)
     
-    device_health_check_topic_handler = DeviceControlTopicHandler()
-    battery_info_topic_handler = BatteryInfoTopicHandler()
-    rpi_camera_control_topic_handler = CameraControlTopicHandler()
-
     try:
         logger.info("Starting MQTT client connection...")
         await mqtt_client.connect()
         logger.success("MQTT client connected successfully.")
-        await topic_manager.subscribe_handler_to_topic(MQTTTopics.DEVICE_CONTROL.value, device_health_check_topic_handler.handle_incoming_message)
+        await topic_manager.subscribe_handler_to_topic(MQTTTopics.DEVICE_CONTROL.with_device(device_id), DeviceControlTopicHandler(device_id).handle_incoming_message)
         logger.info("Subscribed to device control topic.")
-        await topic_manager.subscribe_handler_to_topic(MQTTTopics.BATTERY_CONTROL.value, battery_info_topic_handler.handle_incoming_message)
+        await topic_manager.subscribe_handler_to_topic(MQTTTopics.BATTERY_CONTROL.with_device(device_id), BatteryInfoTopicHandler(device_id).handle_incoming_message)
         logger.info("Subscribed to battery info topic.")
-        await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.value, rpi_camera_control_topic_handler.handle_incoming_message)
+        await topic_manager.subscribe_handler_to_topic(MQTTTopics.CAMERA_CONTROL.with_device(device_id), CameraControlTopicHandler(device_id).handle_incoming_message)
         logger.info("Subscribed to camera control topic.")
 
         logger.success("MQTT client subscribed to rpi-camera/control.")

@@ -111,3 +111,17 @@ class AwsMQTTClient:
         except Exception as e:
             self.logger.error(f"Error during disconnect: {e}")
             self.logger.debug(traceback.format_exc())
+
+    async def unsubscribe(self, topic):
+        self.logger.info(f"Unsubscribing from topic '{topic}'...")
+
+        try:
+            unsubscribe_future, packet_id = self.mqtt_connection.unsubscribe(topic)
+            await asyncio.wrap_future(unsubscribe_future)
+            self.logger.success(
+                f"Successfully unsubscribed from topic '{topic}' with packet ID {packet_id}"
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to unsubscribe from topic '{topic}': {e}")
+            self.logger.debug(traceback.format_exc())
+            raise
