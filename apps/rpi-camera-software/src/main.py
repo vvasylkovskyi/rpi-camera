@@ -8,7 +8,7 @@ from mqtt_topics_manager.battery_info_topic_handler import BatteryInfoTopicHandl
 from mqtt_topics_manager.device_control_topic_handler import DeviceControlTopicHandler
 from shared.mqtt.mqtt_topics import MQTTTopics
 from shared.mqtt.mqtt_clients import MQTTClients
-from battery_manager.battery_manager import BatteryManager
+from battery.battery_manager import BatteryManager
 from device.device import Device
 
 logger = Logger("main")

@@ -11,13 +11,13 @@ from camera.streaming_output import StreamingOutput
 from webrtc.webrtc_streamer import PicameraVideoTrack, WebRTCStreamer
 
 
-class Camera:
+class RaspberrypiCamera:
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.logger = Logger("RpiCamera")
+            cls._instance.logger = Logger("RaspberrypiCamera")
             cls._instance._init_camera()
         return cls._instance
 

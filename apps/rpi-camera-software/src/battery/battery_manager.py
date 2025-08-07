@@ -1,24 +1,20 @@
 
 from shared.logger.logger import Logger
 
-from pijuice_battery.pijuice_battery import PiJuiceBattery
 from shared.models.battery_metrics import BatteryMetrics
-
+from battery.battery_factory import BatteryFactory
 
 class BatteryManager:
     _instance = None
-
+    logger = Logger("BatteryManager")
+    battery = None
+    
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.logger = Logger("BatteryManager")
-            cls._instance.__init__()
+            cls._instance.battery = BatteryFactory()
         return cls._instance
-    
-    def __init__(self):
-        self.battery = PiJuiceBattery()
-        self.logger = Logger("BatteryManager")
-        
+
     def get_battery_info(self):
         battery_status = self.battery.get_status()
 

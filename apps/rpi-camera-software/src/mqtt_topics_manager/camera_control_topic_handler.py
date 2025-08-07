@@ -4,14 +4,14 @@ from shared.models.video_event import VideoRecordingEvent
 from shared.mqtt.mqtt_clients import MQTTClients
 from shared.mqtt.mqtt_topics import MQTTTopics
 
-from camera.camera import Camera
+from camera.camera_factory import CameraFactory
 from mqtt_topics_manager.base_topic_handler import BaseTopicHandler
 
 
 class CameraControlTopicHandler(BaseTopicHandler):
     def __init__(self):
         super().__init__("CameraControlTopicHandler", MQTTClients.CAMERA.value)
-        self.camera = Camera()
+        self.camera = CameraFactory()
 
     def get_request_model(self):
         return CameraControlEvent

@@ -3,7 +3,7 @@ from shared.models.battery_metrics import BatteryMetrics
 from shared.mqtt.mqtt_clients import MQTTClients
 from shared.mqtt.mqtt_topics import MQTTTopics
 
-from battery_manager.battery_manager import BatteryManager
+from battery.battery_manager import BatteryManager
 from mqtt_topics_manager.base_topic_handler import BaseTopicHandler
 
 
