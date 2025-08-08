@@ -1,40 +1,40 @@
-name: CI
+# name: CI
 
-# 1
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push events but only for the master branch
-  push:
-    branches: [main]
-    # Allows you to run this workflow manually from the Actions tab
-    workflow_dispatch:
-      inputs:
-      version:
-        description: "Deploy RPI Camera"
-        required: true
+# # 1
+# # Controls when the workflow will run
+# on:
+#   # Triggers the workflow on push events but only for the master branch
+#   push:
+#     branches: [main]
+#     # Allows you to run this workflow manually from the Actions tab
+#     workflow_dispatch:
+#       inputs:
+#       version:
+#         description: "Deploy RPI Camera"
+#         required: true
 
-jobs:
-  deploy_to_rpi:
-    runs-on: [self-hosted, ARM64]
-    steps:
-      - name: Pull latest code from rpi-camera
-        run: |
-          cd ~/git/rpi-camera
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/github_key
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git pull
+# jobs:
+#   deploy_to_rpi:
+#     runs-on: [self-hosted, ARM64]
+#     steps:
+#       - name: Pull latest code from rpi-camera
+#         run: |
+#           cd ~/git/rpi-camera
+#           eval "$(ssh-agent -s)"
+#           ssh-add ~/.ssh/github_key
+#           ssh-keyscan github.com >> ~/.ssh/known_hosts
+#           git pull
 
-      - name: Install dependencies
-        run: make
-        working-directory: ./rpi-camera-software
+#       - name: Install dependencies
+#         run: make
+#         working-directory: ./rpi-camera-software
 
-      - name: Kill whatever is using port 8081
-        run: |
-          PID=$(sudo lsof -ti tcp:8081 || sudo ss -lptn 'sport = :8081' | awk 'NR > 1 {print $6}' | sed 's/pid=//' | cut -d, -f1)
-          if [ -n "$PID" ]; then
-            echo "Killing process on port 8081 (PID $PID). Systemd will restart service"
-            sudo kill -9 $PID
-          else
-            echo "Nothing is running on port 8081"
-          fi
+#       - name: Kill whatever is using port 8081
+#         run: |
+#           PID=$(sudo lsof -ti tcp:8081 || sudo ss -lptn 'sport = :8081' | awk 'NR > 1 {print $6}' | sed 's/pid=//' | cut -d, -f1)
+#           if [ -n "$PID" ]; then
+#             echo "Killing process on port 8081 (PID $PID). Systemd will restart service"
+#             sudo kill -9 $PID
+#           else
+#             echo "Nothing is running on port 8081"
+#           fi

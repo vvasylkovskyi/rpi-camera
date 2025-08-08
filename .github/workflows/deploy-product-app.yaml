@@ -28,7 +28,7 @@ jobs:
         run: |
           TAG=${{ github.sha }}
           echo "Using tag: $TAG"
-          docker build -f ./apps/product-app/deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rpi-product-app:$TAG .
+          docker build -f ./apps/product-app/deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rpi-product-app:$TAG ./apps/product-app
           docker push ${{ secrets.DOCKER_USERNAME }}/rpi-product-app:$TAG
 
   update_terraform_vars:
