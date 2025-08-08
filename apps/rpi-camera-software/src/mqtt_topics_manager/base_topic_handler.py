@@ -4,6 +4,7 @@ import json
 from pydantic import ValidationError
 from shared.clients.aws_mqtt_client import AwsMQTTClient
 from shared.logger.logger import Logger
+from shared.models.generic_request_event import GenericRequestEvent
 from shared.mqtt.mqtt_clients import MQTTClients
 
 
@@ -40,3 +41,9 @@ class BaseTopicHandler(ABC):
 
     def get_device_id(self) -> str:
         return self.device_id
+    
+    def get_request_id(self, payload: GenericRequestEvent) -> str:
+        return payload.request_id
+
+    def get_response_topic(self, payload: GenericRequestEvent) -> str:
+        return f"{self.get_topic()}/response/{self.get_request_id(payload)}"

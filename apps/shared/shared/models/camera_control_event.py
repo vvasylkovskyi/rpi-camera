@@ -2,6 +2,8 @@ from enum import Enum
 from pydantic import BaseModel
 from typing import Optional
 
+from shared.models.generic_request_event import GenericRequestEvent
+
 
 class CameraAction(Enum):
     START = "start"
@@ -14,7 +16,7 @@ class WebRTCOffer(BaseModel):
     type: str
     sdp: str
 
-class CameraControlEvent(BaseModel):
+class CameraControlEvent(GenericRequestEvent):
     action: CameraAction
     webrtc_offer: Optional[WebRTCOffer] = None
     webrtc_answer: Optional[str] = None

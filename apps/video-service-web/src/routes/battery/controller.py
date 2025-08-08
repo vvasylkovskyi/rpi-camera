@@ -11,12 +11,13 @@ logger = Logger("battery_router")
 
 @battery_router.get("/health-check")
 async def health_check(_: Request):    
+    device_id = "rpi-camera-device"
     mqtt_rpc_client = MqttRpcClient()
     event = BatteryInfoRequestEvent(
         action=BatteryAction.GET_HEALTH_CHECK.value,
     )
 
-    result: dict = await mqtt_rpc_client.call(MQTTTopics.BATTERY_CONTROL.value, event.json())
+    result: dict = await mqtt_rpc_client.call(MQTTTopics.BATTERY_CONTROL.with_device(device_id), event.json())
     result = BatteryInfoResponseEvent.validate(result)
     return {
         "data": result

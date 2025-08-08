@@ -26,7 +26,7 @@ class CameraControlTopicHandler(BaseTopicHandler):
         #     self.handle_stop_video_event()
         if command == CameraAction.START_WEBRTC_STREAM:
             webrtc_offer = payload.webrtc_offer
-            await self.handle_start_webrtc_stream_event(webrtc_offer)
+            await self.handle_start_webrtc_stream_event(payload, webrtc_offer)
         elif command == CameraAction.STOP_WEBRTC_STREAM:
             await self.handle_stop_webrtc_stream_event()
         else:
@@ -56,7 +56,7 @@ class CameraControlTopicHandler(BaseTopicHandler):
     #             self.logger.error(f"Failed to upload {filename} to S3")
     #             return False
 
-    async def handle_start_webrtc_stream_event(self, webrtc_offer: WebRTCOffer):
+    async def handle_start_webrtc_stream_event(self, payload: CameraControlEvent, webrtc_offer: WebRTCOffer):
         answer_sdp = await self.camera.start_webrtc_stream(webrtc_offer)
         if not answer_sdp:
             self.logger.error("Failed to start WebRTC stream.")
@@ -66,8 +66,8 @@ class CameraControlTopicHandler(BaseTopicHandler):
             action=CameraAction.START_WEBRTC_STREAM_ANSWER,
             webrtc_answer=answer_sdp
         )
-        self.logger.info(f"Publishing WebRTC stream answer to: {self.get_topic()}/response")
-        self.mqtt_client.publish(f"{self.get_topic()}/response", event.json())
+        self.logger.info(f"Publishing WebRTC stream answer to: {self.get_response_topic(payload)}")
+        self.mqtt_client.publish(f"{self.get_response_topic(payload)}", event.json())
         self.logger.info("Camera WebRTC stream started.")
 
     async def handle_stop_webrtc_stream_event(self):

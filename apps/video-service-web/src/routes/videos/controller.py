@@ -23,6 +23,7 @@ async def get_all_videos():
 
 @videos_router.post("/start-webrtc")
 async def start_streaming_service(request: Request):    
+    device_id = "rpi-camera-device"
     body = await request.json()
     offer_type = body.get("type")
     offer_sdp = body.get("sdp")
@@ -34,7 +35,7 @@ async def start_streaming_service(request: Request):
 
     mqtt_rpc_client = MqttRpcClient()
 
-    result: dict = await mqtt_rpc_client.call(MQTTTopics.CAMERA_CONTROL.value, event.json(), 180)
+    result: dict = await mqtt_rpc_client.call(MQTTTopics.CAMERA_CONTROL.with_device(device_id), event.json(), 180)
     return {
         "status": "success",
         "webrtc_answer": result["webrtc_answer"],
@@ -43,14 +44,14 @@ async def start_streaming_service(request: Request):
 
 @videos_router.get("/stop-webrtc")
 async def stop_webrtc():
-
+    device_id = "rpi-camera-device"
     mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
 
     event = CameraControlEvent(
         action=CameraAction.STOP_WEBRTC_STREAM,
     )
 
-    mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.value, event.json())
+    mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.with_device(device_id), event.json())
 
     return {
         "status": "Video streaming service stopped successfully",
