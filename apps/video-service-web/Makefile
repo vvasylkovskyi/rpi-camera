@@ -141,3 +141,9 @@ run:
 	@echo "Starting the development server"
 	$(MAKE) link_shared
 	@PYTHONPATH=src $(POETRY) run uvicorn main:app --host 0.0.0.0 --port 4000 --reload
+
+.PHONY: create-jwt
+create-jwt:
+	@echo "Creating JWT for user_id=$(user_id)"
+	@PYTHONPATH=src $(POETRY) run python scripts/create_jwt.py $(user_id)
+
