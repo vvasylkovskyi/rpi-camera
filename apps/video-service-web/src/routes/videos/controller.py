@@ -48,6 +48,7 @@ async def start_streaming_service(request: Request, user_id: str = Depends(get_c
 @videos_router.get("/stop-webrtc")
 async def stop_webrtc(user_id: str = Depends(get_current_user)):
     device_id = "rpi-camera-device"
+    logger.info(f">>> user_id: {user_id}")
     mqtt_client = AwsMQTTClient(MQTTClients.WEB_SERVICE.value)
 
     event = CameraControlEvent(
