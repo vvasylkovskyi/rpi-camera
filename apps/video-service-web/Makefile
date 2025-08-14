@@ -147,3 +147,22 @@ create-jwt:
 	@echo "Creating JWT for user_id=$(user_id)"
 	@PYTHONPATH=src $(POETRY) run python scripts/create_jwt.py $(user_id)
 
+.PHONY: alembic-init
+alembic-init:
+	@echo "Initializing Alembic"
+	@$(POETRY) run alembic init src/database/migrations
+
+.PHONY: alembic-revision
+alembic-revision:
+	@echo "Creating Alembic revision $(name)"
+	@$(POETRY) run alembic revision --autogenerate -m $(name)
+
+.PHONY: migrate
+migrate:
+	@echo "Running Alembic migrations"
+	@$(POETRY) run alembic upgrade head
+
+.PHONY: rollback
+rollback:
+	@echo "Rolling back Alembic migrations"
+	@$(POETRY) run alembic downgrade -1
