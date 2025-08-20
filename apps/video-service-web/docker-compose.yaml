@@ -1,5 +1,17 @@
 services:
-
+  video-service-web:
+    container_name: video-service-web
+    build:
+      context: .. # Needs to be /apps folder so that shared packages can be included
+      dockerfile: ./video-service-web/Dockerfile
+  #   # image: vvasylkovskyi1/vvasylkovskyi-video-service-web:latest
+  #   # restart: '${DOCKER_RESTART_POLICY:-unless-stopped}'
+    env_file:
+      - .env
+    # ports:
+    #   - '4000:4000'
+    #   - '4001:4001/udp'
+    network_mode: "host" 
   postgres_db:
     image: postgres:16
     container_name: postgres-db
@@ -19,16 +31,3 @@ networks:
     name: app-network
 
 
-  # video-service-web:
-  #   container_name: video-service-web
-  #   build:
-  #     context: .. # Needs to be /apps folder so that shared packages can be included
-  #     dockerfile: ./video-service-web/Dockerfile
-  # #   # image: vvasylkovskyi1/vvasylkovskyi-video-service-web:latest
-  # #   # restart: '${DOCKER_RESTART_POLICY:-unless-stopped}'
-  #   env_file:
-  #     - .env
-  #   # ports:
-  #   #   - '4000:4000'
-  #   #   - '4001:4001/udp'
-  #   network_mode: "host" 
