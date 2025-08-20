@@ -20,11 +20,16 @@ logger = Logger("videos_router")
 @videos_router.get("/")
 async def get_all_videos(user_id: str = Depends(get_current_user)):
     logger.info("Received request to get all videos")
-    return handle_response(data={"status": "All videos retrieved successfully", "user_id": user_id}, status_code=status.HTTP_200_OK)
+    return handle_response(
+        data={"status": "All videos retrieved successfully", "user_id": user_id},
+        status_code=status.HTTP_200_OK,
+    )
 
 
 @videos_router.post("/start-webrtc")
-async def start_streaming_service(request: Request, user_id: str = Depends(get_current_user)):
+async def start_streaming_service(
+    request: Request, user_id: str = Depends(get_current_user)
+):
     device_id = "rpi-camera-device"
     body = await request.json()
     offer_type = body.get("type")
@@ -37,12 +42,17 @@ async def start_streaming_service(request: Request, user_id: str = Depends(get_c
 
     mqtt_rpc_client = MqttRpcClient()
 
-    result: dict = await mqtt_rpc_client.call(MQTTTopics.CAMERA_CONTROL.with_device(device_id), event.json(), 180)
-    
-    return handle_response(data={
-        "status": "success",
-        "webrtc_answer": result["webrtc_answer"],
-    }, status_code=status.HTTP_200_OK)
+    result: dict = await mqtt_rpc_client.call(
+        MQTTTopics.CAMERA_CONTROL.with_device(device_id), event.json(), 180
+    )
+
+    return handle_response(
+        data={
+            "status": "success",
+            "webrtc_answer": result["webrtc_answer"],
+        },
+        status_code=status.HTTP_200_OK,
+    )
 
 
 @videos_router.get("/stop-webrtc")
@@ -57,6 +67,9 @@ async def stop_webrtc(user_id: str = Depends(get_current_user)):
 
     mqtt_client.publish(MQTTTopics.CAMERA_CONTROL.with_device(device_id), event.json())
 
-    return handle_response(data={
-        "status": "Video streaming service stopped successfully",
-    }, status_code=status.HTTP_200_OK)
+    return handle_response(
+        data={
+            "status": "Video streaming service stopped successfully",
+        },
+        status_code=status.HTTP_200_OK,
+    )
