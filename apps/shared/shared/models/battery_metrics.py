@@ -8,3 +8,4 @@ class BatteryMetrics(BaseModel):
     current: str
     charging_status: str
     energy_consumption: str
+    remaining_battery_time: str

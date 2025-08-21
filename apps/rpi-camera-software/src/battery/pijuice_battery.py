@@ -39,6 +39,31 @@ class PiJuiceBattery:
         self.get_battery_profile()
         self.get_battery_temp_sense_config()
 
+    def calculate_remaining_battery_time(self):
+        # Hardcoded battery properties
+        battery_voltage_nominal = 3.7  # V
+        battery_capacity_mAh = 1820  # mAh
+
+        voltage = self.pijuice.status.GetBatteryVoltage()["data"] / 1000  # mV → V
+        current = self.pijuice.status.GetBatteryCurrent()["data"] / 1000  # mA → A
+        charge_pct = self.pijuice.status.GetChargeLevel()["data"]  # 0–100%
+
+        # Energy remaining in Wh
+        energy_wh = (
+            battery_capacity_mAh / 1000 * battery_voltage_nominal * (charge_pct / 100)
+        )
+
+        power_w = voltage * current
+
+        if power_w > 0:
+            time_remaining_h = energy_wh / power_w
+            time_remaining_min = time_remaining_h * 60
+        else:
+            time_remaining_min = float("inf")  # charging or zero draw
+
+        print(f"Estimated battery life remaining: {time_remaining_min:.1f} minutes")
+        return time_remaining_min
+
     def get_energy_consumption(self):
         voltage = self.pijuice.status.GetBatteryVoltage()["data"] / 1000  # mV → V
         current = self.pijuice.status.GetBatteryCurrent()["data"] / 1000  # mA → A

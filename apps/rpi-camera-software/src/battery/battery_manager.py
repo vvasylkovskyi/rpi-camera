@@ -18,6 +18,7 @@ class BatteryManager:
     def get_battery_info(self):
         battery_status = self.battery.get_status()
         energy_consumption_watt = self.battery.get_energy_consumption()
+        remaining_battery_time_minutes = self.battery.calculate_remaining_battery_time()
 
         battery_info = BatteryMetrics(
             charge_level=f"{self.battery.get_charge_level()}%",
@@ -26,6 +27,7 @@ class BatteryManager:
             current=f"{self.battery.get_current()}mA",
             energy_consumption=f"{energy_consumption_watt:.2f} W",
             charging_status=battery_status["battery"],
+            remaining_battery_time=f"{remaining_battery_time_minutes:.1f} minutes",
         )
 
         self.logger.info(f"Battery Info: {battery_info}")

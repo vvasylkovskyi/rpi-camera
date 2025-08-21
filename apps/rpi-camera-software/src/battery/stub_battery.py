@@ -16,6 +16,10 @@ class StubBattery:
             "StubBattery initialized, no real battery functionality available."
         )
 
+    def calculate_remaining_battery_time(self):
+        self.logger.warning("Battery remaining time not available (StubBattery used)")
+        return float("inf")
+
     def get_energy_consumption(self):
         self.logger.warning(
             "Battery energy consumption not available (StubBattery used)"
