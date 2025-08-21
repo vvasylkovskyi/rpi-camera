@@ -35,6 +35,36 @@ return power
 
 For me this yielded `8.40W` which seems quite a bit for an idle device. Notice that if your device is charging then the value will be negative which is a consequence of how battery monitoring systems calculate the "net" of charge. 
 
+### Measuring remaining battery time
+
+With a little bit of math we can also estimate how much time we have left until the battery is dead. This is going to be a rough estimate since the consumption values fluctuate. Nevertheless a good information to have with a little bit of python code: 
+
+```python
+battery_voltage_nominal = 3.7  # V
+battery_capacity_mAh = 1820  # mAh
+
+voltage = self.pijuice.status.GetBatteryVoltage()["data"] / 1000  # mV → V
+current = self.pijuice.status.GetBatteryCurrent()["data"] / 1000  # mA → A
+charge_pct = self.pijuice.status.GetChargeLevel()["data"]  # 0–100%
+
+# Energy remaining in Wh
+energy_wh = (
+    battery_capacity_mAh / 1000 * battery_voltage_nominal * (charge_pct / 100)
+)
+
+power_w = voltage * current
+
+if power_w > 0:
+    time_remaining_h = energy_wh / power_w
+    time_remaining_min = time_remaining_h * 60
+else:
+    time_remaining_min = float("inf")  # charging or zero draw
+
+print(f"Estimated battery life remaining: {time_remaining_min:.1f} minutes") # 120 minutes
+```
+
+In the code above the `battery_voltage_nominal` and `battery_capacity_mAh` are the hardcoded values that can be found on the battery details. It varies from manufacturer to manufacturer. The ideia of the script is to use the full battery capacity, get the remaining one by multiplying by `charge_pct` and obtain the Watts hours. Once we have Watt hours it is only a matter of dividing them per amount of power consumed per second which is `power_w`.
+
 ### Reducing unnecessary battery consumption
 
 So now we know how much energy we consume, let's try and reduce the consumption. So how do we reduce energy consumption on a general purpose electronics device such as raspberry pi? There are several quick wins: 
