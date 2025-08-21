@@ -39,6 +39,13 @@ class PiJuiceBattery:
         self.get_battery_profile()
         self.get_battery_temp_sense_config()
 
+    def get_energy_consumption(self):
+        voltage = self.pijuice.status.GetBatteryVoltage()["data"] / 1000  # mV → V
+        current = self.pijuice.status.GetBatteryCurrent()["data"] / 1000  # mA → A
+        power = voltage * current
+        print(f"Battery power: {power:.2f} W")
+        return power
+
     def get_status(self):
         try:
             status = self.pijuice.status.GetStatus()

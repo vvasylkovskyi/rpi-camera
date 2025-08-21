@@ -132,3 +132,8 @@ typecheck:
 .PHONY: run
 run:
 	@PYTHONPATH=src $(POETRY) run watchfiles "python src/main.py" src
+
+.PHONY: enable-low-power-mode
+enable-low-power-mode:
+	@echo "Enabling low-power mode..."
+	@$(POETRY) run bash energy_consumption/low_power_mode.sh

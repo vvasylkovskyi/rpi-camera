@@ -12,8 +12,16 @@ class StubBattery:
         return cls._instance
 
     def _init_battery(self):
-        self.logger.warning("StubBattery initialized, no real battery functionality available.")
-        
+        self.logger.warning(
+            "StubBattery initialized, no real battery functionality available."
+        )
+
+    def get_energy_consumption(self):
+        self.logger.warning(
+            "Battery energy consumption not available (StubBattery used)"
+        )
+        return 0
+
     def get_status(self):
         self.logger.warning("Battery status not available (StubBattery used)")
         return {"battery": "unknown"}
