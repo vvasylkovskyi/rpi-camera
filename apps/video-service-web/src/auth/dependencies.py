@@ -23,7 +23,6 @@ CLERK_JWKS_URL = os.environ["CLERK_JWKS_URL"]
 # Cache JWKS to avoid fetching on every request
 _jwks_cache = None
 
-
 def get_jwks():
     global _jwks_cache
     if _jwks_cache is None:
@@ -32,18 +31,16 @@ def get_jwks():
         _jwks_cache = resp.json()
     return _jwks_cache
 
-
 def jwk_to_pem(jwk):
     """Convert a single JWK entry to PEM format"""
-    n = int.from_bytes(base64.urlsafe_b64decode(jwk["n"] + "=="), "big")
-    e = int.from_bytes(base64.urlsafe_b64decode(jwk["e"] + "=="), "big")
+    n = int.from_bytes(base64.urlsafe_b64decode(jwk['n'] + '=='), 'big')
+    e = int.from_bytes(base64.urlsafe_b64decode(jwk['e'] + '=='), 'big')
     public_key = rsa.RSAPublicNumbers(e, n).public_key(default_backend())
     pem = public_key.public_bytes(
         encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
     )
     return pem
-
 
 def get_public_key_for_kid(kid):
     jwks = get_jwks()
@@ -51,7 +48,6 @@ def get_public_key_for_kid(kid):
         if key["kid"] == kid:
             return jwk_to_pem(key)
     raise HTTPException(status_code=401, detail="Public key not found")
-
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials

@@ -10,7 +10,7 @@
       Type=simple
       User={{ ansible_user }}
       EnvironmentFile=/etc/rpi-camera.env
-      WorkingDirectory=/home/{{ ansible_user }}/git/rpi-camera/rpi-camera-software
+      WorkingDirectory=/home/{{ ansible_user }}/rpi-camera/apps/rpi-camera-software
       ExecStart=/usr/bin/make run
       Restart=on-failure
       RestartSec=5
