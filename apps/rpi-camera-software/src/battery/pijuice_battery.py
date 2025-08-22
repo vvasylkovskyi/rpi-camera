@@ -39,6 +39,18 @@ class PiJuiceBattery:
         self.get_battery_profile()
         self.get_battery_temp_sense_config()
 
+    def set_low_power_mode(self):
+        self.pijuice.config.SetChargeCurrent(500)  # 500 mA
+        self.pijuice.config.SetChargeVoltage(4100)  # 4.1 V cutoff
+        print("⚡ Set to LOW power mode (500 mA, 4.1 V)")
+
+    def set_high_power_mode(self):
+        self.pijuice.config.SetChargeCurrent(
+            2000
+        )  # 2000 mA (max depends on battery/power supply)
+        self.pijuice.config.SetChargeVoltage(4200)  # 4.2 V cutoff
+        print("⚡ Set to HIGH power mode (2000 mA, 4.2 V)")
+
     def calculate_remaining_battery_time(self):
         # Hardcoded battery properties
         battery_voltage_nominal = 3.7  # V

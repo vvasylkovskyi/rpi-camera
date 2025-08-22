@@ -16,6 +16,12 @@ class StubBattery:
             "StubBattery initialized, no real battery functionality available."
         )
 
+    def set_low_power_mode(self):
+        self.logger.warning("Low power mode not available (StubBattery used)")
+
+    def set_high_power_mode(self):
+        self.logger.warning("High power mode not available (StubBattery used)")
+
     def calculate_remaining_battery_time(self):
         self.logger.warning("Battery remaining time not available (StubBattery used)")
         return float("inf")
