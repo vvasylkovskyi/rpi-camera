@@ -1,4 +1,5 @@
 - name: Install device essentials via ansible pull
+  hosts: localhost
   become: true
 
   vars:
