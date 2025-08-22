@@ -13,8 +13,3 @@
   apt:
     name: python3-picamera2
     state: present
-
-- name: Install FFMPEG
-  apt:
-    name: ffmpeg
-    state: present

@@ -8,9 +8,9 @@
 
       [Service]
       Type=simple
-      User={{ ansible_user }}
+      User={{ user }}
       EnvironmentFile=/etc/rpi-camera.env
-      WorkingDirectory=/home/{{ ansible_user }}/rpi-camera/apps/rpi-camera-software
+      WorkingDirectory=/home/{{ user }}/rpi-camera/apps/rpi-camera-software
       ExecStart=/usr/bin/make run
       Restart=on-failure
       RestartSec=5

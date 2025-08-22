@@ -1,0 +1,21 @@
+- name: Install device essentials via ansible pull
+  hosts: all
+  become: true
+
+  vars:
+    user: "{{ home_path }}"
+
+    aws_iot_local_path: "{{ certs_dir }}"
+    aws_iot_core_endpoint: "{{ aws_iot_core_endpoint }}"
+    aws_iot_client_id: "{{ device_id }}"
+    aws_iot_path_to_cert: "{{ certs_dir }}/device.pem.crt"
+    aws_iot_path_to_key: "{{ certs_dir }}/private.pem.key"
+    aws_iot_path_to_root_cert: "{{ certs_dir }}/AmazonRootCA1.pem"
+    # systemd_camera_service_name: "rpi-camera.service"
+
+  roles:
+    - setup
+    - create_env_file_for_camera_server
+    - pijuice-battery
+    - camera_imx500
+    # - start_camera_server
