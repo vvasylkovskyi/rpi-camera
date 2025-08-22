@@ -18,8 +18,10 @@ echo "$response" | jq -r '.data' | base64 --decode > /tmp/creds.json
 # Extract PEMs/keys
 jq -r '.certificatePem' /tmp/creds.json > "$CERTS_DIR/device.pem.crt"
 jq -r '.privateKey' /tmp/creds.json > "$CERTS_DIR/private.pem.key"
-jq -r '.publicKey' /tmp/creds.json > "$CERTS_DIR/public.pem.key"
-jq -r '.rootCA' /tmp/creds.json > "$CERTS_DIR/AmazonRootCA1.pem"
+
+echo "Downloading AmazonRootCA1.pem..."
+curl -sS https://www.amazontrust.com/repository/AmazonRootCA1.pem -o "$CERTS_DIR/AmazonRootCA1.pem"
+
 
 chmod 600 "$CERTS_DIR/private.pem.key"
 chmod 644 "$CERTS_DIR/"*.pem*
