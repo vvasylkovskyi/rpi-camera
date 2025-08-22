@@ -1,12 +1,10 @@
 # #!/bin/bash
 # set -euo pipefail
 
-# API_URL="http://localhost:4000/api/v1/device/register"
+API_URL="https://www.viktorvasylkovskyi.com/api/register-iot-device"
 
-# echo "Requesting certificates from API..."
-
-# response=$(curl -s -X GET "$API_URL" \
-#     -H "Content-Type: application/json")
+response=$(curl -s -X GET "$API_URL" \
+    -H "Content-Type: application/json")
 
 HOME_PATH="$HOME"
 # # Parse JSON using jq
