@@ -13,7 +13,7 @@ CERTS_DIR="$HOME/aws_iot_ssl_credentials_$DEVICE_ID"
 mkdir -p "$CERTS_DIR"
 
 # Decode Base64 JSON to temporary file
-echo "$response" | jq -r '.data.credsBase64' | base64 --decode > /tmp/creds.json
+echo "$response" | jq -r '.data' | base64 --decode > /tmp/creds.json
 
 # Extract PEMs/keys
 jq -r '.certificatePem' /tmp/creds.json > "$CERTS_DIR/device.pem.crt"
